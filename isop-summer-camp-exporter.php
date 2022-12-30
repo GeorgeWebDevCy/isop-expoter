@@ -109,8 +109,6 @@ function isop_summer_camp_callback() {
 		
 		// Load the PhpSpreadsheet library
 		require_once( dirname( __FILE__ ) . '/vendor/autoload.php' );
-        //echo dirname( __FILE__ ) . '/vendor/autoload.php';
-
 		
 		// Create a new Spreadsheet object
 		$spreadsheet = new Spreadsheet();
@@ -144,6 +142,18 @@ function isop_summer_camp_callback() {
 		  }
 		  $sheet->setCellValue( 'D' . $row, $customer_name );
 		  $sheet->setCellValue( 'E' . $row, $order->get_total() );
+		  //get EPO data start
+		  $options = THEMECOMPLETE_EPO_API()->get_option( $order->get_id() ,'all' );
+		  	foreach ($options as $item_id => $epos){
+				$item = new WC_Order_Item_Product($item_id);
+				$product = $item->get_product();
+				$output .= "<br><strong>{$product->get_name()}</strong><br>";
+					foreach ($epos as $epo){
+						$output .= ' -- '. $epo['name'] .' : '. $epo['value'] . "<br>";
+					}
+				}
+				echo $output;
+		  //get EPO data end
 		  $row++;
 		}
 		
@@ -181,14 +191,14 @@ function isop_summer_camp_callback() {
 		//$sheet->setBreak( 'A2', \PhpOffice\PhpSpreadsheet\Worksheet::BREAK_ROW );
 		
 		// Redirect output to a client’s web browser (Excel5)
-		header( 'Content-Type: application/vnd.ms-excel' );
-		header( 'Content-Disposition: attachment;filename="isop-summer-camp-orders.xls"' );
-		header( 'Cache-Control: max-age=0' );
+		//header( 'Content-Type: application/vnd.ms-excel' );
+		//header( 'Content-Disposition: attachment;filename="isop-summer-camp-orders.xls"' );
+		//header( 'Cache-Control: max-age=0' );
 		
-		$excel_writer = new Xlsx($spreadsheet);
-		ob_end_clean();
-		$excel_writer->save( 'php://output' );
-		exit;
+		//$excel_writer = new Xlsx($spreadsheet);
+		//ob_end_clean();
+		//$excel_writer->save( 'php://output' );
+		//exit;
 	  }
 	}
 	
