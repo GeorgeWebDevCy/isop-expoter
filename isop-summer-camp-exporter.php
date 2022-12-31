@@ -36,7 +36,35 @@ if ( ! defined( 'WPINC' ) ) {
  * Rename this for your plugin and update it as you release new versions.
  */
 define( 'ISOP_SUMMER_CAMP_EXPORTER_VERSION', '1.0.0' );
+/*
+Constant I need for the custom exporter
+*/
 
+define ('PROGRAMME','Select the Programme the child will be attending (Registration fee €20 non-refundable');
+define ('ISISOP','Is the child a student at The International School of Paphos 2022 - 2023');
+define ('YEARGROUP','Which year group are they in?');
+define ('WEEKS','Please choose the week/s that you would like to register your child for');
+define ('NAME','Name');
+define ('SURNAME','Surname');
+define ('DOB','Date of birth');
+define ('NATIONALITY','Nationality');
+define ('SPOKEN_LANGS','Please list the language/s that your child speaks');
+define ('ALLERGIES','Does your child have any health problems / allergies?');
+define ('ALLOW_SWIMMING','Allow child to take part in swimming activity');
+define ('PARENTAL_CONSENT','As a parent/guardian of the applicant and with our doctor\'s agreement, I declare that my child is healthy and can take part in the athletic activities of the Summer Camp.');
+define ('ADD_CHILD','Add Another Child');
+define ('WEEKS','Please choose the week/s that you would like to register your child for');
+define ('WEEK1','Week 1: Monday 26th June - Friday 30th June');
+define ('WEEK2','Week 2: Monday 3rd July - Friday 7th July');
+define ('WEEK3','Week 3: Monday 10th July - Friday 14th July');
+define ('WEEK4','Week 4: Monday 17th July - Friday 21nd July');
+define ('WEEK5','Week 5: Monday 24th July - Friday 28th July');
+define ('ALL_WEEKS','All 5 weeks (If you selected this, please do not select the weeks below)');
+define ('PARENT_NAME','Name of Parent / Guardian');
+define ('PARENT_PHONE','Telephone / Contact number');
+define ('PARENT_EMAIL','Parent\'s e-mail address');
+define ('PARENT_ADDRESS','Parent\'s address (and address residing in Paphos if different)');
+define ('PARENT_SIG','E-Signature of parent / guardian:');
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -112,7 +140,6 @@ function isop_summer_camp_callback() {
 		
 		// Create a new Spreadsheet object
 		$spreadsheet = new Spreadsheet();
-		
 		// Set the document properties
 		$spreadsheet->getProperties()->setCreator( 'Isop Summer Camp Exporter' )
 		  ->setLastModifiedBy( 'Isop Summer Camp Exporter' )
@@ -131,6 +158,28 @@ function isop_summer_camp_callback() {
 		$sheet->setCellValue( 'C1', 'Status' );
 		$sheet->setCellValue( 'D1', 'Customer' );
 		$sheet->setCellValue( 'E1', 'Total' );
+		$sheet->setCellValue( 'F1', 'Programme' );
+		$sheet->setCellValue( 'G1', 'ISOP Student' );
+		$sheet->setCellValue( 'H1', 'Year Group' );
+		$sheet->setCellValue( 'I1', 'Name' );
+		$sheet->setCellValue( 'J1', 'Surname' );
+		$sheet->setCellValue( 'K1', 'DOB' );
+		$sheet->setCellValue( 'L1', 'Nationallity' );
+		$sheet->setCellValue( 'M1', 'Languages' );
+		$sheet->setCellValue( 'N1', 'Allergies' );
+		$sheet->setCellValue( 'O1', 'Swimming allowed' );
+		$sheet->setCellValue( 'P1', 'Athletic activities allowed' );
+		$sheet->setCellValue( 'Q1', 'Week 1' );
+		$sheet->setCellValue( 'R1', 'Week 2' );
+		$sheet->setCellValue( 'S1', 'Week 3' );
+		$sheet->setCellValue( 'T1', 'Week 4' );
+		$sheet->setCellValue( 'U1', 'Week 5' );
+		$sheet->setCellValue( 'V1', 'Parent Name' );
+		$sheet->setCellValue( 'X1', 'Parent Phone' );
+		$sheet->setCellValue( 'Y1', 'Parent Email' );
+		$sheet->setCellValue( 'Z1', 'Parent Address' );
+		$sheet->setCellValue( 'AA1', 'Parent Signature' );
+
 		$row = 2;
 		foreach ( $orders as $order ) {
 		  $sheet->setCellValue( 'A' . $row, $order->get_id() );
@@ -143,15 +192,15 @@ function isop_summer_camp_callback() {
 		  $sheet->setCellValue( 'D' . $row, $customer_name );
 		  $sheet->setCellValue( 'E' . $row, $order->get_total() );
 		  //get EPO data start
-		  $options = THEMECOMPLETE_EPO_API()->get_option( $order->get_id() ,'all' );
-		  	foreach ($options as $item_id => $epos){
-				$item = new WC_Order_Item_Product($item_id);
-				$product = $item->get_product();
-				$output .= "<br><strong>{$product->get_name()}</strong><br>";
-					foreach ($epos as $epo){
-						$output .= ' -- '. $epo['name'] .' : '. $epo['value'] . "<br>";
-					}
-				}
+		  //$options = THEMECOMPLETE_EPO_API()->get_option( $order->get_id() ,'all' );
+		  	//foreach ($options as $item_id => $epos){
+			//	$item = new WC_Order_Item_Product($item_id);
+			//	$product = $item->get_product();
+			//	$output .= "<br><strong>{$product->get_name()}</strong><br>";
+			//		foreach ($epos as $epo){
+			//			$output .= ' -- '. $epo['name'] .' : '. $epo['value'] . "<br>";
+			//		}
+			//	}
 				echo $output;
 		  //get EPO data end
 		  $row++;
@@ -163,6 +212,27 @@ function isop_summer_camp_callback() {
 		$sheet->getColumnDimension( 'C' )->setWidth( 15 );
 		$sheet->getColumnDimension( 'D' )->setWidth( 30 );
 		$sheet->getColumnDimension( 'E' )->setWidth( 15 );
+		$sheet->getColumnDimension( 'F' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'G' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'H' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'I' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'J' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'K' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'L' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'M' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'N' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'O' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'P' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'Q' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'R' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'S' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'T' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'U' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'V' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'X' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'Y' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'Z' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'AA' )->setWidth( 30 );
 		
 		// Set the styles for the header row
 		$header_style = array(
@@ -173,7 +243,7 @@ function isop_summer_camp_callback() {
 			'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
 		  ),
 		);
-		$sheet->getStyle( 'A1:E1' )->applyFromArray( $header_style );
+		$sheet->getStyle( 'A1:AA1' )->applyFromArray( $header_style );
 		
 		// Set the page setup
 		$sheet->getPageSetup()->setOrientation( \PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE );
@@ -191,14 +261,14 @@ function isop_summer_camp_callback() {
 		//$sheet->setBreak( 'A2', \PhpOffice\PhpSpreadsheet\Worksheet::BREAK_ROW );
 		
 		// Redirect output to a client’s web browser (Excel5)
-		//header( 'Content-Type: application/vnd.ms-excel' );
-		//header( 'Content-Disposition: attachment;filename="isop-summer-camp-orders.xls"' );
-		//header( 'Cache-Control: max-age=0' );
+		header( 'Content-Type: application/vnd.ms-excel' );
+		header( 'Content-Disposition: attachment;filename="isop-summer-camp-orders.xls"' );
+		header( 'Cache-Control: max-age=0' );
 		
-		//$excel_writer = new Xlsx($spreadsheet);
-		//ob_end_clean();
-		//$excel_writer->save( 'php://output' );
-		//exit;
+		$excel_writer = new Xlsx($spreadsheet);
+		ob_end_clean();
+		$excel_writer->save( 'php://output' );
+		exit;
 	  }
 	}
 	
