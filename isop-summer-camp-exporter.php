@@ -40,7 +40,7 @@ define( 'ISOP_SUMMER_CAMP_EXPORTER_VERSION', '1.0.0' );
 Constant I need for the custom exporter
 */
 
-define ('PROGRAMME','Select the Programme the child will be attending (Registration fee €20 non-refundable');
+define ('PROGRAMME','Select the Programme the child will be attending (Registration fee €20 non-refundable)');
 define ('ISISOP','Is the child a student at The International School of Paphos 2022 - 2023');
 define ('YEARGROUP','Which year group are they in?');
 define ('WEEKS','Please choose the week/s that you would like to register your child for');
@@ -53,7 +53,6 @@ define ('ALLERGIES','Does your child have any health problems / allergies?');
 define ('ALLOW_SWIMMING','Allow child to take part in swimming activity');
 define ('PARENTAL_CONSENT','As a parent/guardian of the applicant and with our doctor\'s agreement, I declare that my child is healthy and can take part in the athletic activities of the Summer Camp.');
 define ('ADD_CHILD','Add Another Child');
-define ('WEEKS','Please choose the week/s that you would like to register your child for');
 define ('WEEK1','Week 1: Monday 26th June - Friday 30th June');
 define ('WEEK2','Week 2: Monday 3rd July - Friday 7th July');
 define ('WEEK3','Week 3: Monday 10th July - Friday 14th July');
@@ -63,8 +62,10 @@ define ('ALL_WEEKS','All 5 weeks (If you selected this, please do not select the
 define ('PARENT_NAME','Name of Parent / Guardian');
 define ('PARENT_PHONE','Telephone / Contact number');
 define ('PARENT_EMAIL','Parent\'s e-mail address');
-define ('PARENT_ADDRESS','Parent\'s address (and address residing in Paphos if different)');
+define ('PARENT_ADDRESS','Parent\'s address (and address residing in Paphos if different)::');
 define ('PARENT_SIG','E-Signature of parent / guardian:');
+define ('SET_YES','Yes');
+define ('SET_NO','No');
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -175,13 +176,14 @@ function isop_summer_camp_callback() {
 		$sheet->setCellValue( 'T1', 'Week 4' );
 		$sheet->setCellValue( 'U1', 'Week 5' );
 		$sheet->setCellValue( 'V1', 'Parent Name' );
-		$sheet->setCellValue( 'X1', 'Parent Phone' );
-		$sheet->setCellValue( 'Y1', 'Parent Email' );
-		$sheet->setCellValue( 'Z1', 'Parent Address' );
-		$sheet->setCellValue( 'AA1', 'Parent Signature' );
+		$sheet->setCellValue( 'W1', 'Parent Phone' );
+		$sheet->setCellValue( 'X1', 'Parent Email' );
+		$sheet->setCellValue( 'Y1', 'Parent Address' );
+		$sheet->setCellValue( 'Z1', 'Parent Signature' );
 
 		$row = 2;
 		foreach ( $orders as $order ) {
+			
 		  $sheet->setCellValue( 'A' . $row, $order->get_id() );
 		  $sheet->setCellValue( 'B' . $row, $order->get_date_created()->format( 'Y-m-d H:i:s' ) );
 		  $sheet->setCellValue( 'C' . $row, $order->get_status() );
@@ -192,18 +194,135 @@ function isop_summer_camp_callback() {
 		  $sheet->setCellValue( 'D' . $row, $customer_name );
 		  $sheet->setCellValue( 'E' . $row, $order->get_total() );
 		  //get EPO data start
-		  //$options = THEMECOMPLETE_EPO_API()->get_option( $order->get_id() ,'all' );
-		  	//foreach ($options as $item_id => $epos){
-			//	$item = new WC_Order_Item_Product($item_id);
-			//	$product = $item->get_product();
+		  $options = THEMECOMPLETE_EPO_API()->get_option( $order->get_id() ,'all' );
+		  	foreach ($options as $item_id => $epos){
+				$item = new WC_Order_Item_Product($item_id);
+				$product = $item->get_product();
 			//	$output .= "<br><strong>{$product->get_name()}</strong><br>";
-			//		foreach ($epos as $epo){
+					foreach ($epos as $epo){
 			//			$output .= ' -- '. $epo['name'] .' : '. $epo['value'] . "<br>";
-			//		}
-			//	}
-				echo $output;
+			//echo 'epo name before if = ' . $epo['name']."\n"; 
+			//echo 'epo PROGRAMME before if = ' . PROGRAMME."\n"; 
+			if($epo['name'] == PROGRAMME)
+			{
+				$sheet->setCellValue( 'F' . $row, $epo['value'] );
+			}
+			
+			if($epo['name'] == ISISOP)
+			{
+				$sheet->setCellValue( 'G' . $row, $epo['value'] );
+			}
+
+			if($epo['name'] == YEARGROUP)
+			{
+				$sheet->setCellValue( 'H' . $row, $epo['value'] );
+			}
+
+			if($epo['name'] == NAME)
+			{
+				$sheet->setCellValue( 'I' . $row, $epo['value'] );
+			}
+
+			if($epo['name'] == SURNAME)
+			{
+				$sheet->setCellValue( 'J' . $row, $epo['value'] );
+			}
+
+			if($epo['name'] == DOB)
+			{
+				$sheet->setCellValue( 'K' . $row, $epo['value'] );
+			}
+
+			if($epo['name'] == NATIONALITY)
+			{
+				$sheet->setCellValue( 'L' . $row, $epo['value'] );
+			}
+
+			if($epo['name'] == SPOKEN_LANGS)
+			{
+				$sheet->setCellValue( 'M' . $row, $epo['value'] );
+			}
+
+			if($epo['name'] == ALLERGIES)
+			{
+				$sheet->setCellValue( 'N' . $row, $epo['value'] );
+			}
+
+			if($epo['name'] == ALLOW_SWIMMING)
+			{
+				$sheet->setCellValue( 'O' . $row, $epo['value'] );
+			}
+
+			if($epo['name'] == PARENTAL_CONSENT)
+			{
+				$sheet->setCellValue( 'P' . $row, $epo['value'] );
+			}
+
+			if($epo['name'] == WEEK1)
+			{
+				$sheet->setCellValue( 'Q' . $row, $epo['value'] );
+			}
+
+			if($epo['name'] == WEEK2)
+			{
+				$sheet->setCellValue( 'R' . $row, $epo['value'] );
+			}
+
+			if($epo['name'] == WEEK3)
+			{
+				$sheet->setCellValue( 'S' . $row, $epo['value'] );
+			}
+
+			if($epo['name'] == WEEK4)
+			{
+				$sheet->setCellValue( 'T' . $row, $epo['value'] );
+			}
+
+			if($epo['name'] == WEEK5)
+			{
+				$sheet->setCellValue( 'U' . $row, $epo['value'] );
+			}
+
+			if($epo['name'] == ALL_WEEKS)
+			{
+				$sheet->setCellValue( 'Q' . SET_YES);
+				$sheet->setCellValue( 'R' . SET_YES);
+				$sheet->setCellValue( 'S' . SET_YES);
+				$sheet->setCellValue( 'T' . SET_YES);
+				$sheet->setCellValue( 'U' . SET_YES);
+			}
+
+			if($epo['name'] == PARENT_NAME)
+			{
+				$sheet->setCellValue( 'V' . $row, $epo['value'] );
+			}
+
+			if($epo['name'] == PARENT_PHONE)
+			{
+				$sheet->setCellValue( 'W' . $row, $epo['value'] );
+			}
+
+			if($epo['name'] == PARENT_EMAIL)
+			{
+				$sheet->setCellValue( 'X' . $row, $epo['value'] );
+			}
+
+			if($epo['name'] == PARENT_ADDRESS)
+			{
+				$sheet->setCellValue( 'Y' . $row, $epo['value'] );
+			}
+
+			if($epo['name'] == PARENT_SIG)
+			{
+				$sheet->setCellValue( 'Z' . $row, $epo['value'] );
+			}
+
+			
+					}
+				}
+				//echo $output;
 		  //get EPO data end
-		  $row++;
+			$row++;
 		}
 		
 		// Set the column widths
@@ -213,7 +332,7 @@ function isop_summer_camp_callback() {
 		$sheet->getColumnDimension( 'D' )->setWidth( 30 );
 		$sheet->getColumnDimension( 'E' )->setWidth( 15 );
 		$sheet->getColumnDimension( 'F' )->setWidth( 30 );
-		$sheet->getColumnDimension( 'G' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'G' )->setWidth( 80 );
 		$sheet->getColumnDimension( 'H' )->setWidth( 30 );
 		$sheet->getColumnDimension( 'I' )->setWidth( 30 );
 		$sheet->getColumnDimension( 'J' )->setWidth( 30 );
@@ -229,11 +348,10 @@ function isop_summer_camp_callback() {
 		$sheet->getColumnDimension( 'T' )->setWidth( 30 );
 		$sheet->getColumnDimension( 'U' )->setWidth( 30 );
 		$sheet->getColumnDimension( 'V' )->setWidth( 30 );
+		$sheet->getColumnDimension( 'W' )->setWidth( 30 );
 		$sheet->getColumnDimension( 'X' )->setWidth( 30 );
 		$sheet->getColumnDimension( 'Y' )->setWidth( 30 );
-		$sheet->getColumnDimension( 'Z' )->setWidth( 30 );
-		$sheet->getColumnDimension( 'AA' )->setWidth( 30 );
-		
+		$sheet->getColumnDimension( 'Z' )->setWidth( 30 );		
 		// Set the styles for the header row
 		$header_style = array(
 		  'font' => array(
@@ -243,7 +361,7 @@ function isop_summer_camp_callback() {
 			'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
 		  ),
 		);
-		$sheet->getStyle( 'A1:AA1' )->applyFromArray( $header_style );
+		$sheet->getStyle( 'A1:Z1' )->applyFromArray( $header_style );
 		
 		// Set the page setup
 		$sheet->getPageSetup()->setOrientation( \PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE );
