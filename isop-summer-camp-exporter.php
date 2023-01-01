@@ -364,7 +364,7 @@ function isop_summer_camp_callback() {
 			if ( ! $customer_name ) {
 				$customer_name = 'Guest';
 			}
-			//echo "parent outside if " . $current_parent_name;
+			$current_parent_name = 'Kokos';
 			$sheet->setCellValue( 'Q' . $row, SET_NO );
 			$sheet->setCellValue( 'R' . $row, SET_NO );
 			$sheet->setCellValue( 'S' . $row, SET_NO );
@@ -373,11 +373,6 @@ function isop_summer_camp_callback() {
 			$sheet->setCellValue( 'G' . $row, SET_NO );
 		  $sheet->setCellValue( 'D' . $row, $customer_name );
 		  $sheet->setCellValue( 'E' . $row, $order->get_total() );
-		  $sheet->setCellValue( 'V' . $row, $current_parent_name );
-		  $sheet->setCellValue( 'W' . $row, $current_parent_phone);
-		  $sheet->setCellValue( 'X' . $row, $current_email );
-		  $sheet->setCellValue( 'Y' . $row, $current_address );
-		  $sheet->setCellValue( 'Z' . $row, $current_parent_signature );
 		  $sheet->setCellValue( 'A' . $row, $order->get_id() );
 		  $sheet->setCellValue( 'B' . $row, $order->get_date_created()->format( 'Y-m-d H:i:s' ) );
 		  $sheet->setCellValue( 'C' . $row, $order->get_status() );
