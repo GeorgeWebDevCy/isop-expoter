@@ -129,7 +129,6 @@ function isop_summer_camp_menu() {
 function isop_summer_camp_callback() {
 	
 
-	$watcher = 0; //this will tell me at which child I am 
 	// Check if the user has clicked the export button
 	if ( isset( $_POST['export_orders'] ) ) {
 	  // Load the WooCommerce plugin functions
@@ -325,38 +324,42 @@ function isop_summer_camp_callback() {
 				
 			}
 
-			if($epo['name'] == PARENT_NAME)
+			//parent data set start
+		  if($epo['name'] == PARENT_NAME)
 			{
 				$sheet->setCellValue( 'V' . $row, $epo['value'] );
-				$current_parent_name = $epo_value;
-				echo "parent in if " . $current_parent_name;
+				
+				
 				
 			}
 
 			if($epo['name'] == PARENT_PHONE)
 			{
 				$sheet->setCellValue( 'W' . $row, $epo['value'] );
-				$current_parent_phone = $epo_value;
+				
 			}
 
 			if($epo['name'] == PARENT_EMAIL)
 			{
 				$sheet->setCellValue( 'X' . $row, $epo['value'] );
-				$current_email = $epo_value;
+				
 	
 			}
 
 			if($epo['name'] == PARENT_ADDRESS)
 			{
 				$sheet->setCellValue( 'Y' . $row, $epo['value'] );
-				$current_address = $epo_value;
+				
 			}
 
 			if($epo['name'] == PARENT_SIG)
 			{
 				$sheet->setCellValue( 'Z' . $row, $epo['value'] );
-				$current_parent_signature = $epo_value;
+				
 			}
+		  //parent data set end
+
+			
 
 			if($epo['name'] == ADD_CHILD && $epo['value'] == SET_YES){
 			$row++;
@@ -364,7 +367,7 @@ function isop_summer_camp_callback() {
 			if ( ! $customer_name ) {
 				$customer_name = 'Guest';
 			}
-			$current_parent_name = 'Kokos';
+			
 			$sheet->setCellValue( 'Q' . $row, SET_NO );
 			$sheet->setCellValue( 'R' . $row, SET_NO );
 			$sheet->setCellValue( 'S' . $row, SET_NO );
