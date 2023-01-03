@@ -126,6 +126,17 @@ function isop_summer_camp_menu() {
   );
 }
 
+function get_epo_data($orderid,$elementid)
+{
+	$options = THEMECOMPLETE_EPO_API()->get_option( $orderid ,$elementid );
+		  foreach ($options as $item_id => $epos){
+				foreach ($epos as $epo){
+					  return $epo['value'];
+				}
+			}
+}
+
+
 function isop_summer_camp_callback() {
 	
 
@@ -192,13 +203,7 @@ function isop_summer_camp_callback() {
 		  $sheet->setCellValue( 'A' . $row, $order->get_id() );
 		  $sheet->setCellValue( 'B' . $row, $order->get_date_created()->format( 'Y-m-d H:i:s' ) );
 		  $sheet->setCellValue( 'C' . $row, $order->get_status() );
-		  $sheet->setCellValue( 'Q' . $row, SET_NO );
-		  $sheet->setCellValue( 'R' . $row, SET_NO );
-		  $sheet->setCellValue( 'S' . $row, SET_NO );
-		  $sheet->setCellValue( 'T' . $row, SET_NO );
-		  $sheet->setCellValue( 'U' . $row, SET_NO );
-		  $sheet->setCellValue( 'G' . $row, SET_NO );
-
+		  
 		  $customer_name = $order->get_formatted_billing_full_name();
 		  if ( ! $customer_name ) {
 			$customer_name = 'Guest';
@@ -206,296 +211,91 @@ function isop_summer_camp_callback() {
 		  $sheet->setCellValue( 'D' . $row, $customer_name );
 		  $sheet->setCellValue( 'E' . $row, $order->get_total() );
 		  //get EPO data start
-		  $options = THEMECOMPLETE_EPO_API()->get_option( $order->get_id() ,'all' );
-		  	foreach ($options as $item_id => $epos){
-				$item = new WC_Order_Item_Product($item_id);
-				$product = $item->get_product();
-				$output .= "<br><strong>{$product->get_name()}</strong><br>";
-					foreach ($epos as $epo){
-						
-			$output .= ' -- '. $epo['name'] .' : '. $epo['value'] . "<br>";
-			
-			 
-			if($epo['name'] == PROGRAMME && $epo['value'] == KINDERGARTEN)
-			{
-				$sheet->setCellValue( 'F' . $row, $epo['value']);
-				$sheet->setCellValue( 'Q' . $row, SET_YES );
-				$sheet->setCellValue( 'R' . $row, SET_YES );
-				$sheet->setCellValue( 'S' . $row, SET_YES );
-				$sheet->setCellValue( 'T' . $row, SET_YES );
-				$sheet->setCellValue( 'U' . $row, SET_YES );
+		  
+		  //$ch1_weeks_non_isop = get_epo_data(5093,'63af5966bf6823.33977599');
+		  //$ch1_weeks_is_isop =  get_epo_data(5093,'63af5966bf6833.29671303');
+		  //var_dump($ch1_weeks_is_isop);
+		  //exit;
 
-				//kindergarten is non isop 100%
-				$sheet->setCellValue( 'G' . $row, SET_NO );
-			}
-			if($epo['name'] == PROGRAMME && $epo['value'] != KINDERGARTEN)
-			{
-				$sheet->setCellValue( 'F' . $row, $epo['value'] );
-			}
+		  //child1
+		  $ch1_programme = get_epo_data($order->get_id(),'63af5966bf65f2.83538784');
+		  $ch1_is_isop = get_epo_data($order->get_id(),'63af5966bf66b8.29518554');
+		  $ch1_year_group = get_epo_data($order->get_id(),'63af5966bf6609.77729253');
+		  $ch1_weeks_non_isop = get_epo_data($order->get_id(),'63af5966bf6823.33977599');
+		  $ch1_weeks_is_isop = get_epo_data($order->get_id(),'63af5966bf6833.29671303');
+		  $ch1_name = get_epo_data($order->get_id(),'63af5966bf68e0.45359226');
+		  $ch1_surname = get_epo_data($order->get_id(),'63af5966bf68f9.57822234');
+		  $ch1_dob = get_epo_data($order->get_id(),'63af5966bf6ab7.76311202');
+		  $ch1_nationality = get_epo_data($order->get_id(),'63af5966bf6902.11779081');
+		  $ch1_langs_spoken = get_epo_data($order->get_id(),'63af5966bf6914.39580309');
+		  $ch1_health = get_epo_data($order->get_id(),'63af5966bf6b17.39160668');
+		  $ch1_swimming = get_epo_data($order->get_id(),'63af5966bf66c0.60214178');
+		  $ch1_consent = get_epo_data($order->get_id(),'63af5966bf66d7.73256181');
+		  $ch1_swimming = get_epo_data($order->get_id(),'63af5966bf66e9.68809535');
 
-			
-			
-			if($epo['name'] == ISISOP && $epo['value'] == SET_YES)
-			{
-				$sheet->setCellValue( 'G' . $row, $epo['value'] );
-			}
+		  var_dump($ch1_weeks_is_isop);
+		  var_dump($ch1_weeks_non_isop);
 
-			if($epo['name'] == YEARGROUP)
-			{
-				$sheet->setCellValue( 'H' . $row, $epo['value'] );
-			}
+		  if($ch1_programme==KINDERGARTEN)
+		  {
 
-			if($epo['name'] == NAME)
-			{
-				$sheet->setCellValue( 'I' . $row, $epo['value'] );
-			}
+			$ch1_week1="Yes";
+			$ch1_week2="Yes";
+			$ch1_week3="Yes";
+			$ch1_week4="Yes";
+			$ch1_week5="Yes";
+			$ch1_year_group="N/A";
+			$ch1_is_isop="No";
 
-			if($epo['name'] == SURNAME)
-			{
-				$sheet->setCellValue( 'J' . $row, $epo['value'] );
-			}
+		  }
+		  if($ch1_programme!=KINDERGARTEN && $ch1_weeks_is_isop!=NULL)
+		  {
+			//if()
+		  }
+		  $parent_name = get_epo_data($order->get_id(),'63af5966bf6a63.63266197');
+		  $parent_phone = get_epo_data($order->get_id(),'63af5966bf6a78.97056490');
+		  $parent_email = get_epo_data($order->get_id(),'63af5966bf6a88.53940357');
+		  $parent_address = get_epo_data($order->get_id(),'63af5966bf6a93.98073229');
+		  $parent_sig = get_epo_data($order->get_id(),'63af5966bf6aa3.21857197');
 
-			if($epo['name'] == DOB)
-			{
-				$sheet->setCellValue( 'K' . $row, $epo['value'] );
-			}
+		  
+		  $sheet->setCellValue( 'F' . $row, $ch1_programme );
+		  $sheet->setCellValue( 'G' . $row, $ch1_is_isop );
+		  $sheet->setCellValue( 'H' . $row, $ch1_year_group );
+		  $sheet->setCellValue( 'I' . $row, $ch1_name );
+		  $sheet->setCellValue( 'J' . $row, $ch1_surname );
+		  $sheet->setCellValue( 'K' . $row, $ch1_dob );
+		  $sheet->setCellValue( 'L' . $row, $ch1_nationality );
+		  $sheet->setCellValue( 'M' . $row, $ch1_langs_spoken );
+		  $sheet->setCellValue( 'N' . $row, $ch1_health );
+		  $sheet->setCellValue( 'O' . $row, $ch1_swimming );
+		  $sheet->setCellValue( 'P' . $row, $ch1_consent );
+		  $sheet->setCellValue( 'Q' . $row, $ch1_week1 );
+		  $sheet->setCellValue( 'R' . $row, $ch1_week2 );
+		  $sheet->setCellValue( 'S' . $row, $ch1_week3 );
+		  $sheet->setCellValue( 'T' . $row, $ch1_week4 );
+		  $sheet->setCellValue( 'U' . $row, $ch1_week5 );
+		  $sheet->setCellValue( 'V' . $row, $parent_name );
+		  $sheet->setCellValue( 'W' . $row, $parent_phone );
+		  $sheet->setCellValue( 'X' . $row, $parent_email );
+		  $sheet->setCellValue( 'Y' . $row, $parent_address );
+		  $sheet->setCellValue( 'Z' . $row, $parent_sig );
 
-			if($epo['name'] == NATIONALITY)
-			{
-				$sheet->setCellValue( 'L' . $row, $epo['value'] );
-			}
+		  
+		  
+		  
+		  
+		  
+		  
+		  //child2
+		  //child3
+		  //child4
+		  //child5
+		  //child6
 
-			if($epo['name'] == SPOKEN_LANGS)
-			{
-				$sheet->setCellValue( 'M' . $row, $epo['value'] );
-			}
 
-			if($epo['name'] == ALLERGIES)
-			{
-				$sheet->setCellValue( 'N' . $row, $epo['value'] );
-			}
 
-			if($epo['name'] == ALLOW_SWIMMING)
-			{
-				$sheet->setCellValue( 'O' . $row, $epo['value'] );
-			}
-
-			if($epo['name'] == PARENTAL_CONSENT)
-			{
-				$sheet->setCellValue( 'P' . $row, $epo['value'] );
-			}
-			
-			if($epo['name'] == WEEKS && $epo['value'] == WEEK1)
-			{
-				$sheet->setCellValue( 'Q' . $row, SET_YES );
-			}
-			
-			if($epo['name'] == WEEKS && $epo['value'] == WEEK2)
-			{
-				$sheet->setCellValue( 'R' . $row, SET_YES );
-			}
-			
-
-			if($epo['name'] == WEEKS && $epo['value'] == WEEK3)
-			{
-				$sheet->setCellValue( 'S' . $row, SET_YES );
-			}
-			
-
-			if($epo['name'] == WEEKS && $epo['value'] == WEEK4)
-			{
-				$sheet->setCellValue( 'T' . $row, SET_YES );
-			}
-			
-
-			if($epo['name'] == WEEKS && $epo['value'] == WEEK5)
-			{
-				$sheet->setCellValue( 'U' . $row, SET_YES );
-			}
-			
-
-			if($epo['name'] == WEEKS && $epo['value'] == ALL_WEEKS)
-			{
-				$sheet->setCellValue( 'Q' . $row, SET_YES );
-				$sheet->setCellValue( 'R' . $row, SET_YES );
-				$sheet->setCellValue( 'S' . $row, SET_YES );
-				$sheet->setCellValue( 'T' . $row, SET_YES );
-				$sheet->setCellValue( 'U' . $row, SET_YES );
-				
-			}
-
-			//parent data set start
-		  if($epo['name'] == PARENT_NAME)
-			{
-				$sheet->setCellValue( 'V' . $row, $epo['value'] );
-				
-				
-				
-			}
-
-			if($epo['name'] == PARENT_PHONE)
-			{
-				$sheet->setCellValue( 'W' . $row, $epo['value'] );
-				
-			}
-
-			if($epo['name'] == PARENT_EMAIL)
-			{
-				$sheet->setCellValue( 'X' . $row, $epo['value'] );
-				
-	
-			}
-
-			if($epo['name'] == PARENT_ADDRESS)
-			{
-				$sheet->setCellValue( 'Y' . $row, $epo['value'] );
-				
-			}
-
-			if($epo['name'] == PARENT_SIG)
-			{
-				$sheet->setCellValue( 'Z' . $row, $epo['value'] );
-				
-			}
-		  //parent data set end
-
-			
-
-			if($epo['name'] == ADD_CHILD && $epo['value'] == SET_YES){
-			$row++;
-			$customer_name = $order->get_formatted_billing_full_name();
-			if ( ! $customer_name ) {
-				$customer_name = 'Guest';
-			}
-			
-			$sheet->setCellValue( 'Q' . $row, SET_NO );
-			$sheet->setCellValue( 'R' . $row, SET_NO );
-			$sheet->setCellValue( 'S' . $row, SET_NO );
-			$sheet->setCellValue( 'T' . $row, SET_NO );
-			$sheet->setCellValue( 'U' . $row, SET_NO );
-			$sheet->setCellValue( 'G' . $row, SET_NO );
-		  $sheet->setCellValue( 'D' . $row, $customer_name );
-		  $sheet->setCellValue( 'E' . $row, $order->get_total() );
-		  $sheet->setCellValue( 'A' . $row, $order->get_id() );
-		  $sheet->setCellValue( 'B' . $row, $order->get_date_created()->format( 'Y-m-d H:i:s' ) );
-		  $sheet->setCellValue( 'C' . $row, $order->get_status() );
-		  	
-
-		  if($epo['name'] == PROGRAMME && $epo['value'] == KINDERGARTEN)
-			{
-				$sheet->setCellValue( 'F' . $row, $epo['value']);
-				$sheet->setCellValue( 'Q' . $row, SET_YES );
-				$sheet->setCellValue( 'R' . $row, SET_YES );
-				$sheet->setCellValue( 'S' . $row, SET_YES );
-				$sheet->setCellValue( 'T' . $row, SET_YES );
-				$sheet->setCellValue( 'U' . $row, SET_YES );
-
-				//kindergarten is non isop 100%
-				$sheet->setCellValue( 'G' . $row, SET_NO );
-			}
-			if($epo['name'] == PROGRAMME && $epo['value'] != KINDERGARTEN)
-			{
-				$sheet->setCellValue( 'F' . $row, $epo['value'] );
-			}
-			
-			if($epo['name'] == ISISOP && $epo['value'] == SET_YES)
-			{
-				$sheet->setCellValue( 'G' . $row, $epo['value'] );
-			}			
-			
-			if($epo['name'] == YEARGROUP)
-			{
-				$sheet->setCellValue( 'H' . $row, $epo['value'] );
-			}
-
-			if($epo['name'] == NAME)
-			{
-				$sheet->setCellValue( 'I' . $row, $epo['value'] );
-			}
-
-			if($epo['name'] == SURNAME)
-			{
-				$sheet->setCellValue( 'J' . $row, $epo['value'] );
-			}
-
-			if($epo['name'] == DOB)
-			{
-				$sheet->setCellValue( 'K' . $row, $epo['value'] );
-			}
-
-			if($epo['name'] == NATIONALITY)
-			{
-				$sheet->setCellValue( 'L' . $row, $epo['value'] );
-			}
-
-			if($epo['name'] == SPOKEN_LANGS)
-			{
-				$sheet->setCellValue( 'M' . $row, $epo['value'] );
-			}
-
-			if($epo['name'] == ALLERGIES)
-			{
-				$sheet->setCellValue( 'N' . $row, $epo['value'] );
-			}
-
-			if($epo['name'] == ALLOW_SWIMMING)
-			{
-				$sheet->setCellValue( 'O' . $row, $epo['value'] );
-			}
-
-			if($epo['name'] == PARENTAL_CONSENT)
-			{
-				$sheet->setCellValue( 'P' . $row, $epo['value'] );
-			}
-			
-			if($epo['name'] == WEEKS && $epo['value'] == WEEK1)
-			{
-				$sheet->setCellValue( 'Q' . $row, SET_YES );
-			}
-			
-			if($epo['name'] == WEEKS && $epo['value'] == WEEK2)
-			{
-				$sheet->setCellValue( 'R' . $row, SET_YES );
-			}
-			
-
-			if($epo['name'] == WEEKS && $epo['value'] == WEEK3)
-			{
-				$sheet->setCellValue( 'S' . $row, SET_YES );
-			}
-			
-
-			if($epo['name'] == WEEKS && $epo['value'] == WEEK4)
-			{
-				$sheet->setCellValue( 'T' . $row, SET_YES );
-			}
-			
-
-			if($epo['name'] == WEEKS && $epo['value'] == WEEK5)
-			{
-				$sheet->setCellValue( 'U' . $row, SET_YES );
-			}
-			
-
-			if($epo['name'] == WEEKS && $epo['value'] == ALL_WEEKS)
-			{
-				$sheet->setCellValue( 'Q' . $row, SET_YES );
-				$sheet->setCellValue( 'R' . $row, SET_YES );
-				$sheet->setCellValue( 'S' . $row, SET_YES );
-				$sheet->setCellValue( 'T' . $row, SET_YES );
-				$sheet->setCellValue( 'U' . $row, SET_YES );
-				
-			}	
-			
-			
-			}
-
-			
-					}
-				}
-				//echo "Row: " .$row. " output: ".$output;
-		  //get EPO data end
-			$row++;
+		  	$row++;
 		}
 		
 		// Set the column widths
@@ -552,14 +352,14 @@ function isop_summer_camp_callback() {
 		//$sheet->setBreak( 'A2', \PhpOffice\PhpSpreadsheet\Worksheet::BREAK_ROW );
 		
 		// Redirect output to a client’s web browser (Excel5)
-		header( 'Content-Type: application/vnd.ms-excel' );
-		header( 'Content-Disposition: attachment;filename="isop-summer-camp-orders.xls"' );
-		header( 'Cache-Control: max-age=0' );
+		//header( 'Content-Type: application/vnd.ms-excel' );
+		//header( 'Content-Disposition: attachment;filename="isop-summer-camp-orders.xls"' );
+		//header( 'Cache-Control: max-age=0' );
 		
-		$excel_writer = new Xlsx($spreadsheet);
-		ob_end_clean();
-		$excel_writer->save( 'php://output' );
-		exit;
+		//$excel_writer = new Xlsx($spreadsheet);
+		//ob_end_clean();
+		//$excel_writer->save( 'php://output' );
+		//exit;
 	  }
 	}
 	
