@@ -9,7 +9,7 @@
  * that starts the plugin.
  *
  * @link              https://www.georgenicolaou.me/
- * @since             1.0.0
+ * @since             2.0.0
  * @package           Isop_Summer_Camp_Exporter
  *
  * @wordpress-plugin
