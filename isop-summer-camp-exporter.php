@@ -176,6 +176,175 @@ function get_current_child_data($ch_programme, $ch_is_isop, $ch_year_group, $ch_
     return $ch_data;
 }
 
+function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig)
+{
+    if ($child_data['programme'] == NULL) {
+        return $row; //just send me the same row back since nothing was affected
+    } else { //start else
+
+        $sheet->setCellValue('A' . $row, $order->get_id());
+        $sheet->setCellValue('B' . $row, $order->get_date_created()->format('Y-m-d H:i:s'));
+        $sheet->setCellValue('C' . $row, $order->get_status());
+        $sheet->setCellValue('Q' . $row, SET_NO);
+        $sheet->setCellValue('R' . $row, SET_NO);
+        $sheet->setCellValue('S' . $row, SET_NO);
+        $sheet->setCellValue('T' . $row, SET_NO);
+        $sheet->setCellValue('U' . $row, SET_NO);
+        $sheet->setCellValue('G' . $row, SET_NO);
+        $sheet->setCellValue('H' . $row, "N/A");
+
+        $customer_name = $order->get_formatted_billing_full_name();
+        if (!$customer_name) {
+            $customer_name = 'Guest';
+        }
+        $sheet->setCellValue('D' . $row, $customer_name);
+        $sheet->setCellValue('E' . $row, $order->get_total());
+        $sheet->setCellValue('F' . $row, $child_data['programme']);
+        if ($child_data['programme'] == KINDERGARTEN) {
+            //echo "Row in child 1 row = " . $row. " Programme is if" . $child1['programme']; 
+
+            $sheet->setCellValue('Q' . $row, SET_YES);
+            $sheet->setCellValue('R' . $row, SET_YES);
+            $sheet->setCellValue('S' . $row, SET_YES);
+            $sheet->setCellValue('T' . $row, SET_YES);
+            $sheet->setCellValue('U' . $row, SET_YES);
+
+            //kindergarten is non isop 100%
+            $sheet->setCellValue('G' . $row, SET_NO);
+        }
+
+        if ($child_data['programme'] != KINDERGARTEN) {
+            $sheet->setCellValue('F' . $row, $child_data['programme']);
+        }
+
+        if ($child_data['is_isop'] == SET_YES) {
+            $sheet->setCellValue('G' . $row, $child_data['is_isop']);
+        }
+
+
+
+        if (isset($child_data['year_group'])) {
+            $sheet->setCellValue('H' . $row, $child_data['year_group']);
+        }
+
+        if (isset($child_data['name'])) {
+            $sheet->setCellValue('I' . $row, $child_data['name']);
+        }
+
+        if (isset($child_data['surname'])) {
+            $sheet->setCellValue('J' . $row, $child_data['surname']);
+        }
+
+        if (isset($child_data['dob'])) {
+            $sheet->setCellValue('K' . $row, $child_data['dob']);
+        }
+        if (isset($child_data['nationality'])) {
+            $sheet->setCellValue('L' . $row, $child_data['nationality']);
+        }
+
+        if (isset($child_data['langs_spoken'])) {
+            $sheet->setCellValue('M' . $row, $child_data['langs_spoken']);
+        }
+
+        if (isset($child_data['health'])) {
+            $sheet->setCellValue('N' . $row, $child_data['health']);
+        }
+
+        if (isset($child_data['swimming'])) {
+            $sheet->setCellValue('O' . $row, $child_data['swimming']);
+        }
+
+        if (isset($child_data['consent'])) {
+            $sheet->setCellValue('P' . $row, $child_data['consent']);
+        }
+
+        if ($child_data['weeks_non_isop'] != NULL) {
+            if (in_array(WEEK1, $child_data['weeks_non_isop'])) {
+                $sheet->setCellValue('Q' . $row, SET_YES);
+            }
+
+            if (in_array(WEEK2, $child_data['weeks_non_isop'])) {
+                $sheet->setCellValue('R' . $row, SET_YES);
+            }
+
+
+            if (in_array(WEEK3, $child_data['weeks_non_isop'])) {
+                $sheet->setCellValue('S' . $row, SET_YES);
+            }
+
+
+            if (in_array(WEEK4, $child_data['weeks_non_isop'])) {
+                $sheet->setCellValue('T' . $row, SET_YES);
+            }
+
+
+            if (in_array(WEEK5, $child_data['weeks_non_isop'])) {
+                $sheet->setCellValue('U' . $row, SET_YES);
+            }
+
+
+            if (in_array(ALL_WEEKS, $child_data['weeks_non_isop'])) {
+                $sheet->setCellValue('Q' . $row, SET_YES);
+                $sheet->setCellValue('R' . $row, SET_YES);
+                $sheet->setCellValue('S' . $row, SET_YES);
+                $sheet->setCellValue('T' . $row, SET_YES);
+                $sheet->setCellValue('U' . $row, SET_YES);
+
+            }
+        }
+
+        //is isop
+
+        if ($child_data['weeks_is_isop'] != NULL) {
+            if (in_array(WEEK1, $child_data['weeks_is_isop'])) {
+                $sheet->setCellValue('Q' . $row, SET_YES);
+            }
+
+            if (in_array(WEEK2, $child_data['weeks_is_isop'])) {
+                $sheet->setCellValue('R' . $row, SET_YES);
+            }
+
+
+            if (in_array(WEEK3, $child_data['weeks_is_isop'])) {
+                $sheet->setCellValue('S' . $row, SET_YES);
+            }
+
+
+            if (in_array(WEEK4, $child_data['weeks_is_isop'])) {
+                $sheet->setCellValue('T' . $row, SET_YES);
+            }
+
+
+            if (in_array(WEEK5, $child_data['weeks_is_isop'])) {
+                $sheet->setCellValue('U' . $row, SET_YES);
+            }
+
+
+            if (in_array(ALL_WEEKS, $child_data['weeks_is_isop'])) {
+                $sheet->setCellValue('Q' . $row, SET_YES);
+                $sheet->setCellValue('R' . $row, SET_YES);
+                $sheet->setCellValue('S' . $row, SET_YES);
+                $sheet->setCellValue('T' . $row, SET_YES);
+                $sheet->setCellValue('U' . $row, SET_YES);
+
+            }
+        }
+
+        //parent data set start
+        $sheet->setCellValue('V' . $row, $parent_name);
+        $sheet->setCellValue('W' . $row, $parent_phone);
+        $sheet->setCellValue('X' . $row, $parent_email);
+        $sheet->setCellValue('Y' . $row, $parent_address);
+        $sheet->setCellValue('Z' . $row, $parent_sig);
+
+
+        $row++;
+
+    } //end else
+
+    return $row;
+}
+
 function isop_summer_camp_callback()
 {
 
@@ -358,18 +527,13 @@ function isop_summer_camp_callback()
                 $child4 = get_current_child_data($ch4_programme, $ch4_is_isop, $ch4_year_group, $ch4_weeks_is_isop, $ch4_weeks_non_isop, $ch4_name, $ch4_surname, $ch4_dob, $ch4_nationality, $ch4_langs_spoken, $ch4_health, $ch4_swimming, $ch4_consent, $ch4_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig);
                 $child5 = get_current_child_data($ch5_programme, $ch5_is_isop, $ch5_year_group, $ch5_weeks_is_isop, $ch5_weeks_non_isop, $ch5_name, $ch5_surname, $ch5_dob, $ch5_nationality, $ch5_langs_spoken, $ch5_health, $ch5_swimming, $ch5_consent, $ch5_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig);
                 $child6 = get_current_child_data($ch6_programme, $ch6_is_isop, $ch6_year_group, $ch6_weeks_is_isop, $ch6_weeks_non_isop, $ch6_name, $ch6_surname, $ch6_dob, $ch6_nationality, $ch6_langs_spoken, $ch6_health, $ch6_swimming, $ch6_consent, $ch6_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig);
-                echo $order->get_id();
-                var_dump($child1);
-                echo $order->get_id();
-                var_dump($child2);
-                echo $order->get_id();
-                var_dump($child3);
-                echo $order->get_id();
-                var_dump($child4);
-                echo $order->get_id();
-                var_dump($child5);
-                echo $order->get_id();
-                var_dump($child6);
+
+                $row = insert_child_into_sheet($sheet, $row, $order, $child1, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
+                $row = insert_child_into_sheet($sheet, $row, $order, $child2, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
+                $row = insert_child_into_sheet($sheet, $row, $order, $child3, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
+                $row = insert_child_into_sheet($sheet, $row, $order, $child4, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
+                $row = insert_child_into_sheet($sheet, $row, $order, $child5, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
+                $row = insert_child_into_sheet($sheet, $row, $order, $child6, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
 
 
             }
@@ -427,14 +591,14 @@ function isop_summer_camp_callback()
             //$sheet->setBreak( 'A2', \PhpOffice\PhpSpreadsheet\Worksheet::BREAK_ROW );
 
             // Redirect output to a client’s web browser (Excel5)
-            //header('Content-Type: application/vnd.ms-excel');
-            //header('Content-Disposition: attachment;filename="isop-summer-camp-orders.xls"');
-            //header('Cache-Control: max-age=0');
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename="isop-summer-camp-orders.xls"');
+            header('Cache-Control: max-age=0');
 
-            //$excel_writer = new Xlsx($spreadsheet);
-            //ob_end_clean();
-            //$excel_writer->save('php://output');
-            //exit;
+            $excel_writer = new Xlsx($spreadsheet);
+            ob_end_clean();
+            $excel_writer->save('php://output');
+            exit;
         }
     }
 
