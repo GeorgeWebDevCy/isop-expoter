@@ -124,7 +124,7 @@ function isop_summer_camp_menu()
     add_menu_page(
         'Isop Summer Camp Exporter Page',
         'Isop Summer Camp Exporter',
-        'manage_options',
+        'edit_posts',
         'isop-summer-camp-Exporter',
         'isop_summer_camp_callback'
     );
