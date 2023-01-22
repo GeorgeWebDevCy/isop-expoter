@@ -149,7 +149,7 @@ function get_epo_checkbox($orderid, $elementid)
     }
 }
 
-function get_current_child_data($ch_programme, $ch_is_isop, $ch_year_group, $ch_weeks_is_isop, $ch_weeks_non_isop, $ch_name, $ch_surname, $ch_dob, $ch_nationality, $ch_langs_spoken, $ch_health, $ch_swimming, $ch_consent, $ch_add, $ch_parent_name, $ch_parent_phone, $ch_parent_address, $ch_parent_email, $ch_parent_sig)
+function get_current_child_data($ch_programme, $ch_is_isop, $ch_year_group, $ch_weeks_is_isop, $ch_weeks_non_isop, $ch_name, $ch_surname, $ch_dob, $ch_nationality, $ch_langs_spoken, $ch_health, $ch_swimming, $ch_consent, $ch_photo, $ch_add, $ch_parent_name, $ch_parent_phone, $ch_parent_address, $ch_parent_email, $ch_parent_sig)
 {
     $ch_data = array(
         'programme' => $ch_programme,
@@ -165,6 +165,7 @@ function get_current_child_data($ch_programme, $ch_is_isop, $ch_year_group, $ch_
         'health' => $ch_health,
         'swimming' => $ch_swimming,
         'consent' => $ch_consent,
+        'photo' => $ch_photo,
         'add' => $ch_add,
         'parent_name' => $ch_parent_name,
         'parent_phone' => $ch_parent_phone,
@@ -192,6 +193,7 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
         $sheet->setCellValue('U' . $row, SET_NO);
         $sheet->setCellValue('G' . $row, SET_NO);
         $sheet->setCellValue('H' . $row, "N/A");
+        $sheet->setCellValue('AA' . $row, SET_NO);
 
         $customer_name = $order->get_formatted_billing_full_name();
         if (!$customer_name) {
@@ -257,7 +259,9 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
         if (isset($child_data['consent'])) {
             $sheet->setCellValue('P' . $row, $child_data['consent']);
         }
-
+        if (isset($child_data['photo'])) {
+            $sheet->setCellValue('AA' . $row, $child_data['photo']);
+        }
         if ($child_data['weeks_non_isop'] != NULL) {
             if (in_array(WEEK1, $child_data['weeks_non_isop'])) {
                 $sheet->setCellValue('Q' . $row, SET_YES);
@@ -275,12 +279,14 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
 
             if (in_array(WEEK4, $child_data['weeks_non_isop'])) {
                 $sheet->setCellValue('T' . $row, SET_YES);
+                $sheet->setCellValue('G' . $row, SET_NO);
             }
 
 
             if (in_array(WEEK5, $child_data['weeks_non_isop'])) {
                 $sheet->setCellValue('U' . $row, SET_YES);
             }
+            $sheet->setCellValue('G' . $row, SET_NO);
 
 
             if (in_array(ALL_WEEKS, $child_data['weeks_non_isop'])) {
@@ -421,6 +427,7 @@ function isop_summer_camp_callback()
             $sheet->setCellValue('X1', 'Parent Email');
             $sheet->setCellValue('Y1', 'Parent Address');
             $sheet->setCellValue('Z1', 'Parent Signature');
+            $sheet->setCellValue('AA1', 'Photo Consent');
 
             $row = 2;
             foreach ($orders as $order) {
@@ -444,6 +451,7 @@ function isop_summer_camp_callback()
                 $ch1_health = get_epo_data($order->get_id(), '63af5966bf6b17.39160668');
                 $ch1_swimming = get_epo_data($order->get_id(), '63af5966bf66c0.60214178');
                 $ch1_consent = get_epo_data($order->get_id(), '63af5966bf66d7.73256181');
+                $ch1_photo = get_epo_data($order->get_id(), '');
                 $ch1_add = get_epo_data($order->get_id(), '63af5966bf66e9.68809535');
 
 
@@ -460,6 +468,7 @@ function isop_summer_camp_callback()
                 $ch2_health = get_epo_data($order->get_id(), '63af5966bf6b21.65304896');
                 $ch2_swimming = get_epo_data($order->get_id(), '63af5966bf6708.30339774');
                 $ch2_consent = get_epo_data($order->get_id(), '63af5966bf6711.30933957');
+                $ch2_photo = get_epo_data($order->get_id(), '');
                 $ch2_add = get_epo_data($order->get_id(), '63af5966bf6723.27620189');
 
                 $ch3_programme = get_epo_data($order->get_id(), '63af5966bf6633.46404074');
@@ -475,6 +484,7 @@ function isop_summer_camp_callback()
                 $ch3_health = get_epo_data($order->get_id(), '63af5966bf6b30.82069406');
                 $ch3_swimming = get_epo_data($order->get_id(), '63af5966bf6743.96139145');
                 $ch3_consent = get_epo_data($order->get_id(), '63af5966bf6754.49183047');
+                $ch3_photo = get_epo_data($order->get_id(), '');
                 $ch3_add = get_epo_data($order->get_id(), '63af5966bf6765.07482808');
                 $ch4_programme = get_epo_data($order->get_id(), '63af5966bf6658.47035044');
 
@@ -490,6 +500,7 @@ function isop_summer_camp_callback()
                 $ch4_health = get_epo_data($order->get_id(), '63af5966bf6b48.69483007');
                 $ch4_swimming = get_epo_data($order->get_id(), '63af5966bf6786.90980010');
                 $ch4_consent = get_epo_data($order->get_id(), '63af5966bf6793.14371019');
+                $ch4_photo = get_epo_data($order->get_id(), '');
                 $ch4_add = get_epo_data($order->get_id(), '63af5966bf6723.27620189');
 
                 $ch5_programme = get_epo_data($order->get_id(), '63af5966bf6670.63985332');
@@ -505,6 +516,7 @@ function isop_summer_camp_callback()
                 $ch5_health = get_epo_data($order->get_id(), '63af5966bf6b55.65755709');
                 $ch5_swimming = get_epo_data($order->get_id(), '63af5966bf67c9.10944839');
                 $ch5_consent = get_epo_data($order->get_id(), '63af5966bf67d6.72965658');
+                $ch5_photo = get_epo_data($order->get_id(), '');
                 $ch5_add = get_epo_data($order->get_id(), '63af5966bf67e5.90673687');
 
                 $ch6_programme = get_epo_data($order->get_id(), '63af5966bf6698.50776270');
@@ -520,13 +532,14 @@ function isop_summer_camp_callback()
                 $ch6_health = get_epo_data($order->get_id(), '63af5966bf6b64.40371067');
                 $ch6_swimming = get_epo_data($order->get_id(), '63af5966bf6801.44652147');
                 $ch6_consent = get_epo_data($order->get_id(), '63af5966bf6817.50128411');
+                $ch6_photo = get_epo_data($order->get_id(), '');
 
-                $child1 = get_current_child_data($ch1_programme, $ch1_is_isop, $ch1_year_group, $ch1_weeks_is_isop, $ch1_weeks_non_isop, $ch1_name, $ch1_surname, $ch1_dob, $ch1_nationality, $ch1_langs_spoken, $ch1_health, $ch1_swimming, $ch1_consent, $ch1_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig);
-                $child2 = get_current_child_data($ch2_programme, $ch2_is_isop, $ch2_year_group, $ch2_weeks_is_isop, $ch2_weeks_non_isop, $ch2_name, $ch2_surname, $ch2_dob, $ch2_nationality, $ch2_langs_spoken, $ch2_health, $ch2_swimming, $ch2_consent, $ch2_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig);
-                $child3 = get_current_child_data($ch3_programme, $ch3_is_isop, $ch3_year_group, $ch3_weeks_is_isop, $ch3_weeks_non_isop, $ch3_name, $ch3_surname, $ch3_dob, $ch3_nationality, $ch3_langs_spoken, $ch3_health, $ch3_swimming, $ch3_consent, $ch3_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig);
-                $child4 = get_current_child_data($ch4_programme, $ch4_is_isop, $ch4_year_group, $ch4_weeks_is_isop, $ch4_weeks_non_isop, $ch4_name, $ch4_surname, $ch4_dob, $ch4_nationality, $ch4_langs_spoken, $ch4_health, $ch4_swimming, $ch4_consent, $ch4_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig);
-                $child5 = get_current_child_data($ch5_programme, $ch5_is_isop, $ch5_year_group, $ch5_weeks_is_isop, $ch5_weeks_non_isop, $ch5_name, $ch5_surname, $ch5_dob, $ch5_nationality, $ch5_langs_spoken, $ch5_health, $ch5_swimming, $ch5_consent, $ch5_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig);
-                $child6 = get_current_child_data($ch6_programme, $ch6_is_isop, $ch6_year_group, $ch6_weeks_is_isop, $ch6_weeks_non_isop, $ch6_name, $ch6_surname, $ch6_dob, $ch6_nationality, $ch6_langs_spoken, $ch6_health, $ch6_swimming, $ch6_consent, $ch6_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig);
+                $child1 = get_current_child_data($ch1_programme, $ch1_is_isop, $ch1_year_group, $ch1_weeks_is_isop, $ch1_weeks_non_isop, $ch1_name, $ch1_surname, $ch1_dob, $ch1_nationality, $ch1_langs_spoken, $ch1_health, $ch1_swimming, $ch1_consent, $ch1_photo, $ch1_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig);
+                $child2 = get_current_child_data($ch2_programme, $ch2_is_isop, $ch2_year_group, $ch2_weeks_is_isop, $ch2_weeks_non_isop, $ch2_name, $ch2_surname, $ch2_dob, $ch2_nationality, $ch2_langs_spoken, $ch2_health, $ch2_swimming, $ch2_consent, $ch2_photo, $ch2_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig);
+                $child3 = get_current_child_data($ch3_programme, $ch3_is_isop, $ch3_year_group, $ch3_weeks_is_isop, $ch3_weeks_non_isop, $ch3_name, $ch3_surname, $ch3_dob, $ch3_nationality, $ch3_langs_spoken, $ch3_health, $ch3_swimming, $ch3_consent, $ch3_photo, $ch3_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig);
+                $child4 = get_current_child_data($ch4_programme, $ch4_is_isop, $ch4_year_group, $ch4_weeks_is_isop, $ch4_weeks_non_isop, $ch4_name, $ch4_surname, $ch4_dob, $ch4_nationality, $ch4_langs_spoken, $ch4_health, $ch4_swimming, $ch4_consent, $ch4_photo, $ch4_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig);
+                $child5 = get_current_child_data($ch5_programme, $ch5_is_isop, $ch5_year_group, $ch5_weeks_is_isop, $ch5_weeks_non_isop, $ch5_name, $ch5_surname, $ch5_dob, $ch5_nationality, $ch5_langs_spoken, $ch5_health, $ch5_swimming, $ch5_consent, $ch5_photo, $ch5_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig);
+                $child6 = get_current_child_data($ch6_programme, $ch6_is_isop, $ch6_year_group, $ch6_weeks_is_isop, $ch6_weeks_non_isop, $ch6_name, $ch6_surname, $ch6_dob, $ch6_nationality, $ch6_langs_spoken, $ch6_health, $ch6_swimming, $ch6_consent, $ch6_photo, $ch6_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig);
 
                 $row = insert_child_into_sheet($sheet, $row, $order, $child1, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
                 $row = insert_child_into_sheet($sheet, $row, $order, $child2, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
@@ -564,6 +577,7 @@ function isop_summer_camp_callback()
             $sheet->getColumnDimension('X')->setWidth(30);
             $sheet->getColumnDimension('Y')->setWidth(30);
             $sheet->getColumnDimension('Z')->setWidth(30);
+            $sheet->getColumnDimension('AA')->setWidth(30);
             // Set the styles for the header row
             $header_style = array(
                 'font' => array(
