@@ -587,7 +587,7 @@ function isop_summer_camp_callback()
                     'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
                 ),
             );
-            $sheet->getStyle('A1:Z1')->applyFromArray($header_style);
+            $sheet->getStyle('A1:AA1')->applyFromArray($header_style);
 
             // Set the page setup
             $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
