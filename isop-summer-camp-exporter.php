@@ -40,7 +40,7 @@ define('ISOP_SUMMER_CAMP_EXPORTER_VERSION', '2.0.0');
 Constant I need for the custom exporter
 */
 
-define('KINDERGARTEN', 'KINDERGARTEN PROGRAMME Ages: 2.5 - 3.5 (Only Non-Issp. If you child is in the ISOP Kindergarden contact the school)');
+define('KINDERGARTEN', 'KINDERGARTEN PROGRAMME Ages: 2.5 - 3.5 (Only Non-ISOP. If you child is in the ISOP Kindergarten, please see your child\'s teacher)');
 define('PROGRAMME', 'Select the Programme the child will be attending (Registration fee €20 non-refundable)');
 define('ISISOP', 'Is the child a student at The International School of Paphos 2022 - 2023?');
 define('YEARGROUP', 'Which year group are they in?');
