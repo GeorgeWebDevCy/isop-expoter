@@ -40,7 +40,7 @@ define('ISOP_SUMMER_CAMP_EXPORTER_VERSION', '2.0.0');
 Constant I need for the custom exporter
 */
 
-define('KINDERGARTEN', 'KINDERGARTEN PROGRAMME Ages: 2.5 - 3.5 (Only Non-ISOP. If you child is in the ISOP Kindergarten, please see your child\'s teacher)');
+define('KINDERGARTEN', 'KINDERGARTEN PROGRAMME Ages: 2.5 - 3.5 (Only Non-ISOP. If your child is in the ISOP Kindergarten, please see their teacher)');
 define('PROGRAMME', 'Select the Programme the child will be attending (Registration fee €20 non-refundable)');
 define('ISISOP', 'Is the child a student at The International School of Paphos 2022 - 2023?');
 define('YEARGROUP', 'Which year group are they in?');
@@ -141,11 +141,13 @@ function get_epo_data($orderid, $elementid)
 
 function get_epo_checkbox($orderid, $elementid)
 {
+	$myitems = array();
     $options = THEMECOMPLETE_EPO_API()->get_option($orderid, $elementid);
     foreach ($options as $item_id => $epos) {
         foreach ($epos as $epo) {
-            return $epo;
+             $items[] = $epo;
         }
+		return $items;
     }
 }
 
@@ -272,31 +274,31 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
         }
 
         if ($child_data['weeks_non_isop'] != NULL) {
-            if (in_array(WEEK1, $child_data['weeks_non_isop'])) {
+            if (in_array(WEEK1, $child_data['weeks_non_isop'], true)) {
                 $sheet->setCellValue('Q' . $row, SET_YES);
             }
 
-            if (in_array(WEEK2, $child_data['weeks_non_isop'])) {
+            if (in_array(WEEK2, $child_data['weeks_non_isop'], true)) {
                 $sheet->setCellValue('R' . $row, SET_YES);
             }
 
 
-            if (in_array(WEEK3, $child_data['weeks_non_isop'])) {
+            if (in_array(WEEK3, $child_data['weeks_non_isop'], true)) {
                 $sheet->setCellValue('S' . $row, SET_YES);
             }
 
 
-            if (in_array(WEEK4, $child_data['weeks_non_isop'])) {
+            if (in_array(WEEK4, $child_data['weeks_non_isop'], true)) {
                 $sheet->setCellValue('T' . $row, SET_YES);
             }
 
 
-            if (in_array(WEEK5, $child_data['weeks_non_isop'])) {
+            if (in_array(WEEK5, $child_data['weeks_non_isop'], true)) {
                 $sheet->setCellValue('U' . $row, SET_YES);
             }
 
 
-            if (in_array(ALL_WEEKS, $child_data['weeks_non_isop'])) {
+            if (in_array(ALL_WEEKS, $child_data['weeks_non_isop'], true)) {
                 $sheet->setCellValue('Q' . $row, SET_YES);
                 $sheet->setCellValue('R' . $row, SET_YES);
                 $sheet->setCellValue('S' . $row, SET_YES);
@@ -307,23 +309,23 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
         }
 
         //is isop
-
+        
         if ($child_data['weeks_is_isop'] != NULL) {
-            if (in_array(WEEK1, $child_data['weeks_is_isop'])) {
+            if (in_array(WEEK1, $child_data['weeks_is_isop'], true)) {
                 $sheet->setCellValue('Q' . $row, SET_YES);
             }
 
-            if (in_array(WEEK2, $child_data['weeks_is_isop'])) {
+            if (in_array(WEEK2, $child_data['weeks_is_isop'], true)) {
                 $sheet->setCellValue('R' . $row, SET_YES);
             }
 
 
-            if (in_array(WEEK3, $child_data['weeks_is_isop'])) {
+            if (in_array(WEEK3, $child_data['weeks_is_isop'], true)) {
                 $sheet->setCellValue('S' . $row, SET_YES);
             }
 
 
-            if (in_array(WEEK4, $child_data['weeks_is_isop'])) {
+            if (in_array(WEEK4, $child_data['weeks_is_isop'], true)) {
                 $sheet->setCellValue('T' . $row, SET_YES);
             }
 
@@ -387,7 +389,8 @@ function isop_summer_camp_callback()
                     'status' => array('completed', 'processing'),
                     'order' => 'ASC',
                     'orderby' => 'ID',
-                    'date_created' => $startDate . '...' . $endDate
+                    'date_created' => $startDate . '...' . $endDate,
+					'posts_per_page' => -1
 
                 )
             );
@@ -443,7 +446,7 @@ function isop_summer_camp_callback()
             foreach ($orders as $order) {
 
                 $parent_name = get_epo_data($order->get_id(), '63c796ae351489.63307542');
-                $parent_phone = get_epo_data($order->get_id(), '63c796ae351489.63307542');
+                $parent_phone = get_epo_data($order->get_id(), '63c796ae351491.52493353');
                 $parent_email = get_epo_data($order->get_id(), '63c796ae3514a5.64335462');
                 $parent_address = get_epo_data($order->get_id(), '63c796ae3514b1.17358693');
                 $parent_sig = get_epo_data($order->get_id(), '63c796ae3514c9.80400881');
@@ -500,7 +503,7 @@ function isop_summer_camp_callback()
                 $ch4_is_isop = get_epo_data($order->get_id(), '63c796ae351159.16308749');
                 $ch4_year_group = get_epo_data($order->get_id(), '63c796ae351042.98702374');
                 $ch4_weeks_non_isop = get_epo_checkbox($order->get_id(), '63c796ae351269.16023819');
-                $ch4_weeks_is_isop = get_epo_checkbox($order->get_id(), '63c796ae351269.16023819');
+                $ch4_weeks_is_isop = get_epo_checkbox($order->get_id(), '63c796ae351272.45449040');
                 $ch4_name = get_epo_data($order->get_id(), '63c796ae3513c2.35501410');
                 $ch4_surname = get_epo_data($order->get_id(), '63c796ae3513d7.04441495');
                 $ch4_dob = get_epo_data($order->get_id(), '63c796ae351509.09606580');
@@ -514,9 +517,9 @@ function isop_summer_camp_callback()
 
                 $ch5_programme = get_epo_data($order->get_id(), '63c796ae351056.35349346');
                 $ch5_is_isop = get_epo_data($order->get_id(), '63c796ae351191.05095302');
-                $ch5_year_group = get_epo_data($order->get_id(), '63c796ae351191.05095302');
+                $ch5_year_group = get_epo_data($order->get_id(), '63c796ae351068.59422766');
                 $ch5_weeks_non_isop = get_epo_checkbox($order->get_id(), '63c796ae3512c5.48807658');
-                $ch5_weeks_is_isop = get_epo_checkbox($order->get_id(), '63c796ae3512c5.48807658');
+                $ch5_weeks_is_isop = get_epo_checkbox($order->get_id(), '63c796ae3512d6.33127856');
                 $ch5_name = get_epo_data($order->get_id(), '63c796ae351403.28834192');
                 $ch5_surname = get_epo_data($order->get_id(), '63c796ae351418.19452819');
                 $ch5_dob = get_epo_data($order->get_id(), '63c796ae351513.50958059');
@@ -549,14 +552,19 @@ function isop_summer_camp_callback()
                 $child4 = get_current_child_data($ch4_programme, $ch4_is_isop, $ch4_year_group, $ch4_weeks_is_isop, $ch4_weeks_non_isop, $ch4_name, $ch4_surname, $ch4_dob, $ch4_nationality, $ch4_langs_spoken, $ch4_health, $ch4_swimming, $ch4_consent, $ch4_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig, $ch4_photo);
                 $child5 = get_current_child_data($ch5_programme, $ch5_is_isop, $ch5_year_group, $ch5_weeks_is_isop, $ch5_weeks_non_isop, $ch5_name, $ch5_surname, $ch5_dob, $ch5_nationality, $ch5_langs_spoken, $ch5_health, $ch5_swimming, $ch5_consent, $ch5_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig, $ch5_photo);
                 $child6 = get_current_child_data($ch6_programme, $ch6_is_isop, $ch6_year_group, $ch6_weeks_is_isop, $ch6_weeks_non_isop, $ch6_name, $ch6_surname, $ch6_dob, $ch6_nationality, $ch6_langs_spoken, $ch6_health, $ch6_swimming, $ch6_consent, $ch6_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig, $ch6_photo);
-
+                //$isoparray = get_epo_checkbox(5303, '63c796ae351213.50136665');
+				//var_dump($isoparray);
+				//var_dump($ch1_is_isop);
+				
                 $row = insert_child_into_sheet($sheet, $row, $order, $child1, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
                 $row = insert_child_into_sheet($sheet, $row, $order, $child2, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
                 $row = insert_child_into_sheet($sheet, $row, $order, $child3, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
                 $row = insert_child_into_sheet($sheet, $row, $order, $child4, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
                 $row = insert_child_into_sheet($sheet, $row, $order, $child5, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
                 $row = insert_child_into_sheet($sheet, $row, $order, $child6, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
+//debug
 
+//print_r($ch1_weeks_is_isop);
 
             }
             // Set the column widths
@@ -614,14 +622,14 @@ function isop_summer_camp_callback()
             //$sheet->setBreak( 'A2', \PhpOffice\PhpSpreadsheet\Worksheet::BREAK_ROW );
 
             // Redirect output to a client’s web browser (Excel5)
-            header('Content-Type: application/vnd.ms-excel');
-            header('Content-Disposition: attachment;filename="isop-summer-camp-orders.xls"');
-            header('Cache-Control: max-age=0');
+            //header('Content-Type: application/vnd.ms-excel');
+           // header('Content-Disposition: attachment;filename="isop-summer-camp-orders.xlsx"');
+           // header('Cache-Control: max-age=0');
 
-            $excel_writer = new Xlsx($spreadsheet);
-            ob_end_clean();
-            $excel_writer->save('php://output');
-            exit;
+            //$excel_writer = new Xlsx($spreadsheet);
+            //ob_end_clean();
+            //$excel_writer->save('php://output');
+            //exit;
         }
     }
 
