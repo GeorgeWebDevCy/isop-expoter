@@ -471,7 +471,18 @@ function isop_summer_camp_callback()
 
             $row = 2;
             foreach ($orders as $order) {
-
+                unset($ch1_weeks_is_isop);
+                unset($ch1_weeks_non_isop);
+                unset($ch2_weeks_is_isop);
+                unset($ch2_weeks_non_isop);
+                unset($ch3_weeks_is_isop);
+                unset($ch3_weeks_non_isop);
+                unset($ch4_weeks_is_isop);
+                unset($ch4_weeks_non_isop);
+                unset($ch5_weeks_is_isop);
+                unset($ch5_weeks_non_isop);
+                unset($ch6_weeks_is_isop);
+                unset($ch6_weeks_non_isop);
                 $parent_name = get_epo_data($order->get_id(), '63c796ae351489.63307542');
                 $parent_phone = get_epo_data($order->get_id(), '63c796ae351491.52493353');
                 $parent_email = get_epo_data($order->get_id(), '63c796ae3514a5.64335462');
@@ -581,9 +592,11 @@ function isop_summer_camp_callback()
                 $child6 = get_current_child_data($ch6_programme, $ch6_is_isop, $ch6_year_group, $ch6_weeks_is_isop, $ch6_weeks_non_isop, $ch6_name, $ch6_surname, $ch6_dob, $ch6_nationality, $ch6_langs_spoken, $ch6_health, $ch6_swimming, $ch6_consent, $ch6_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig, $ch6_photo);
                 //$isoparray = get_epo_checkbox(5303, '63c796ae351213.50136665');
 				//var_dump($isoparray);
-				//echo '<pre>';
-                //var_dump($child1);
-                //echo '</pre>';
+				echo '<pre>';
+                
+                var_dump($ch1_weeks_is_isop);
+                    
+                echo '</pre>';
 				
                 $row = insert_child_into_sheet($sheet, $row, $order, $child1, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
                 $row = insert_child_into_sheet($sheet, $row, $order, $child2, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
