@@ -413,7 +413,7 @@ function isop_summer_camp_callback()
 
             $orders = wc_get_orders(
                 array(
-                    'status' => array('completed', 'processing', 'on-hold'),
+                     'status' => array('completed', 'processing', 'on-hold'),
                     'order' => 'ASC',
                     'orderby' => 'ID',
                     'date_created' => $startDate . '...' . $endDate,
