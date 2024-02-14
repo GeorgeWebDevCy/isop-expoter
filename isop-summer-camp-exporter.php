@@ -16,7 +16,7 @@
  * Plugin Name:       ISOP Summer Camp Exporter
  * Plugin URI:        https://georgenicolaou.me/plugins/isop-summer-school-exporter
  * Description:       This plugin will export all the information regarding the summer camp orders from WooCommerce to an Excel sheet in a human readable format
- * Version:           2.0.0
+ * Version:           3.0.0
  * Author:            George Nicolaou
  * Author URI:        https://www.georgenicolaou.me/
  * License:           GPL-2.0+
@@ -35,14 +35,14 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('ISOP_SUMMER_CAMP_EXPORTER_VERSION', '2.0.0');
+define('ISOP_SUMMER_CAMP_EXPORTER_VERSION', '3.0.0');
 /*
 Constant I need for the custom exporter
 */
 
 define('KINDERGARTEN', 'KINDERGARTEN PROGRAMME Ages: 2.5 - 3.5 (Only Non-ISOP. If your child is in the ISOP Kindergarten, please see their teacher)');
 define('PROGRAMME', 'Select the Programme the child will be attending (Registration fee €20 non-refundable)');
-define('ISISOP', 'Is the child a student at The International School of Paphos 2022 - 2023?');
+define('ISISOP', 'Is the child a student at The International School of Paphos 2023 - 2024?');
 define('YEARGROUP', 'Which year group are they in?');
 define('WEEKS', 'Please choose the week/s that you would like to register your child for');
 define('NAME', 'Name');
