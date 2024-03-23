@@ -42,7 +42,7 @@ Constant I need for the custom exporter
 
 define('KINDERGARTEN', 'KINDERGARTEN PROGRAMME Ages: 2.5 - 3.5 (Only Non-ISOP. If your child is in the ISOP Kindergarten, please see their teacher)');
 define('PROGRAMME', 'Select the Programme the child will be attending (Registration fee €20 non-refundable)');
-define('ISISOP', 'Is the child a student at The International School of Paphos in 2023-2024 and/or 2024-2025?');
+define('ISISOP', 'Was the child a student at The International School of Paphos in 2023-2024 and/or will the child be a student in  The International School of Paphos in 2024-2025?');
 define('YEARGROUP', 'Which year group are they in?');
 define('WEEKS', 'Please choose the week/s that you would like to register your child for');
 define('NAME', 'Name');
@@ -51,7 +51,7 @@ define('DOB', 'Date of birth');
 define('NATIONALITY', 'Nationality');
 define('SPOKEN_LANGS', 'Please list the language/s that your child speaks');
 define('ALLERGIES', 'Does your child have any health problems / allergies?');
-define('ALLOW_SWIMMING', 'Allow child to take part in swimming activity');
+define('ALLOW_SWIMMING', 'I give permission for my child to take part in swimming');
 define('PARENTAL_CONSENT', 'As a parent/guardian of the applicant and with our doctor\'s agreement, I declare that my child is healthy and can take part in the athletic activities of the Summer Camp.');
 define('ADD_CHILD', 'Add Another Child');
 define('WEEK1', 'Week 1: Tuesday 25th June - Friday 28th June');
@@ -151,7 +151,7 @@ function get_epo_checkbox($orderid, $elementid)
     }
 }
 
-function get_current_child_data($ch_programme, $ch_is_isop, $ch_year_group, $ch_weeks_is_isop, $ch_weeks_non_isop, $ch_name, $ch_surname, $ch_dob, $ch_nationality, $ch_langs_spoken, $ch_health, $ch_swimming, $ch_consent, $ch_add, $ch_parent_name, $ch_parent_phone, $ch_parent_address, $ch_parent_email, $ch_parent_sig, $ch_photo)
+/*function get_current_child_data($ch_programme, $ch_is_isop, $ch_year_group, $ch_weeks_is_isop, $ch_weeks_non_isop, $ch_name, $ch_surname, $ch_dob, $ch_nationality, $ch_langs_spoken, $ch_health, $ch_swimming, $ch_consent, $ch_add, $ch_parent_name, $ch_parent_phone, $ch_parent_address, $ch_parent_email, $ch_parent_sig, $ch_photo)
 {
     $ch_data = array(
         'programme' => $ch_programme,
@@ -178,6 +178,78 @@ function get_current_child_data($ch_programme, $ch_is_isop, $ch_year_group, $ch_
     //var_dump($ch_data);
     return $ch_data;
 }
+*/
+function strip_euro_recursive($value) {
+    if (is_array($value)) {
+        // If value is an array, recursively apply strip_euro_recursive to each element
+        return array_map('strip_euro_recursive', $value);
+    } else {
+        // If value is not an array, strip euro sign and anything after it and then trim whitespace
+        return trim(preg_replace('/€.*$/', '', $value));
+    }
+}
+
+function get_current_child_data($ch_programme, $ch_is_isop, $ch_year_group, $ch_weeks_is_isop, $ch_weeks_non_isop, $ch_name, $ch_surname, $ch_dob, $ch_nationality, $ch_langs_spoken, $ch_health, $ch_swimming, $ch_consent, $ch_add, $ch_parent_name, $ch_parent_phone, $ch_parent_address, $ch_parent_email, $ch_parent_sig, $ch_photo)
+{
+    // Apply strip_euro_recursive to all values
+    $ch_programme = strip_euro_recursive($ch_programme);
+    $ch_is_isop = strip_euro_recursive($ch_is_isop);
+    $ch_year_group = strip_euro_recursive($ch_year_group);
+    $ch_weeks_is_isop = strip_euro_recursive($ch_weeks_is_isop);
+    $ch_weeks_non_isop = strip_euro_recursive($ch_weeks_non_isop);
+    $ch_name = strip_euro_recursive($ch_name);
+    $ch_surname = strip_euro_recursive($ch_surname);
+    $ch_dob = strip_euro_recursive($ch_dob);
+    $ch_nationality = strip_euro_recursive($ch_nationality);
+    $ch_langs_spoken = strip_euro_recursive($ch_langs_spoken);
+    $ch_health = strip_euro_recursive($ch_health);
+    $ch_swimming = strip_euro_recursive($ch_swimming);
+    $ch_consent = strip_euro_recursive($ch_consent);
+    $ch_add = strip_euro_recursive($ch_add);
+    $ch_parent_name = strip_euro_recursive($ch_parent_name);
+    $ch_parent_phone = strip_euro_recursive($ch_parent_phone);
+    $ch_parent_address = strip_euro_recursive($ch_parent_address);
+    $ch_parent_email = strip_euro_recursive($ch_parent_email);
+    $ch_parent_sig = strip_euro_recursive($ch_parent_sig);
+    $ch_photo = strip_euro_recursive($ch_photo);
+
+    // Create the data array
+    $ch_data = array(
+        'programme' => $ch_programme,
+        'is_isop' => $ch_is_isop,
+        'year_group' => $ch_year_group,
+        'weeks_non_isop' => $ch_weeks_non_isop,
+        'weeks_is_isop' => $ch_weeks_is_isop,
+        'name' => $ch_name,
+        'surname' => $ch_surname,
+        'dob' => $ch_dob,
+        'nationality' => $ch_nationality,
+        'langs_spoken' => $ch_langs_spoken,
+        'health' => $ch_health,
+        'swimming' => $ch_swimming,
+        'consent' => $ch_consent,
+        'add' => $ch_add,
+        'parent_name' => $ch_parent_name,
+        'parent_phone' => $ch_parent_phone,
+        'parent_address' => $ch_parent_address,
+        'parent_email' => $ch_parent_email,
+        'parent_sig' => $ch_parent_sig,
+        'photo' => $ch_photo,
+    );
+
+    // Output the data array
+    foreach ($ch_data as $key => $value) {
+        //echo "Before stripping: $key<br>";
+        //echo "After stripping: ";
+        if (is_array($value)) {
+            //var_dump($value);
+        } else {
+            //echo $value . "<br>";
+        }
+    }
+
+    return $ch_data;
+}
 
 function in_array_multi(
     mixed $needle, 
@@ -197,10 +269,14 @@ function in_array_multi(
 
 function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig)
 {
+	
     if ($child_data['programme'] == NULL) {
         return $row; //just send me the same row back since nothing was affected
     } else { //start else
-
+	//echo 'order id = '.$order->get_id();
+	//echo '<pre>';
+	//var_dump($child_data);
+	//echo '</pre>';
         $sheet->setCellValue('A' . $row, $order->get_id());
         $sheet->setCellValue('B' . $row, $order->get_date_created()->format('Y-m-d H:i:s'));
         $sheet->setCellValue('C' . $row, $order->get_status());
@@ -592,11 +668,11 @@ function isop_summer_camp_callback()
                 $child6 = get_current_child_data($ch6_programme, $ch6_is_isop, $ch6_year_group, $ch6_weeks_is_isop, $ch6_weeks_non_isop, $ch6_name, $ch6_surname, $ch6_dob, $ch6_nationality, $ch6_langs_spoken, $ch6_health, $ch6_swimming, $ch6_consent, $ch6_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig, $ch6_photo);
                 //$isoparray = get_epo_checkbox(5303, '63c796ae351213.50136665');
 				//var_dump($isoparray);
-				echo '<pre>';
+			//	echo '<pre>';
                 
-                var_dump($ch1_weeks_is_isop);
-                    
-                echo '</pre>';
+                //var_dump($ch1_weeks_is_isop);
+              //  var_dump($child1);
+               // echo '</pre>';
 				
                 $row = insert_child_into_sheet($sheet, $row, $order, $child1, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
                 $row = insert_child_into_sheet($sheet, $row, $order, $child2, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
@@ -660,8 +736,6 @@ function isop_summer_camp_callback()
             $sheet->getPageMargins()->setLeft(0.75);
             $sheet->getPageMargins()->setBottom(0.75);
 
-            // Set the page breaks
-            //$sheet->setBreak( 'A2', \PhpOffice\PhpSpreadsheet\Worksheet::BREAK_ROW );
 
             // Redirect output to a client’s web browser (Excel5)
             header('Content-Type: application/vnd.ms-excel');
