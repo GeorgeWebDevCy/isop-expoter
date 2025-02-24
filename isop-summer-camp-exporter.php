@@ -16,7 +16,7 @@
  * Plugin Name:       ISOP Summer Camp Exporter
  * Plugin URI:        https://georgenicolaou.me/plugins/isop-summer-school-exporter
  * Description:       This plugin will export all the information regarding the summer camp orders from WooCommerce to an Excel sheet in a human readable format
- * Version:           4.0.3
+ * Version:           4.0.4
  * Author:            George Nicolaou
  * Author URI:        https://www.georgenicolaou.me/
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('ISOP_SUMMER_CAMP_EXPORTER_VERSION', '4.0.3');
+define('ISOP_SUMMER_CAMP_EXPORTER_VERSION', '4.0.4');
 /*
 Constant I need for the custom exporter
 */
@@ -777,14 +777,14 @@ function isop_summer_camp_callback()
 
 
             // Redirect output to a client’s web browser (Excel5)
-            header('Content-Type: application/vnd.ms-excel');
-            header('Content-Disposition: attachment;filename="isop-summer-camp-orders.xlsx"');
-            header('Cache-Control: max-age=0');
+           // header('Content-Type: application/vnd.ms-excel');
+            //header('Content-Disposition: attachment;filename="isop-summer-camp-orders.xlsx"');
+            //header('Cache-Control: max-age=0');
 
-            $excel_writer = new Xlsx($spreadsheet);
-            ob_end_clean();
-            $excel_writer->save('php://output');
-            exit;
+            //$excel_writer = new Xlsx($spreadsheet);
+            //ob_end_clean();
+            //$excel_writer->save('php://output');
+            //exit;
         }
     }
 
