@@ -42,7 +42,7 @@ Constant I need for the custom exporter
 
 /*define('KINDERGARTEN', 'KINDERGARTEN PROGRAMME Ages: 2.5 - 3.5 (Only Non-ISOP. If your child is in the ISOP Kindergarten, please see their teacher)');*/
 define('PROGRAMME', 'Select the Programme the child will be attending (Registration fee €20 non-refundable)');
-define('ISISOP', 'Was the child a student at The International School of Paphos in 2024-2025 and/or will the child be a student in  The International School of Paphos in 2024-2025?');
+define('ISISOP', 'Was the child a student at The International School of Paphos in 2024-2025 and/or will the child be a student in  The International School of Paphos in 2025-2026?');
 define('YEARGROUP', 'Which year group are they in?');
 define('WEEKS', 'Please choose the week/s that you would like to register your child for');
 define('NAME', 'Name');
