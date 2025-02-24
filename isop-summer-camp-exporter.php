@@ -59,7 +59,7 @@ define('WEEK2', 'Week 2: Monday 30th July - Friday 4th July');
 define('WEEK3', 'Week 3: Monday 7th July - Friday 11th July');
 define('WEEK4', 'Week 4: Monday 14th July - Friday 18th July');
 define('WEEK5', 'Week 5: Monday 21st July - Friday 25th July');
-define('WEEK56', 'Week 6: Monday 28th July - Thursday 31st July');
+define('WEEK6', 'Week 6: Monday 28th July - Thursday 31st July');
 define('ALL_WEEKS', 'All 6 weeks (If you selected this, please do not select the weeks below)');
 define('PARENT_NAME', 'Name of Parent / Guardian');
 define('PARENT_PHONE', 'Telephone / Contact number');
