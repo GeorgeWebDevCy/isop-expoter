@@ -71,6 +71,28 @@ define('SET_NO', 'No');
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
+
+/** 
+ * 
+ * Add git autoupdate to help release fixes
+*/
+
+
+require 'plugin-update-checker/plugin-update-checker.php';
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+
+$myUpdateChecker = PucFactory::buildUpdateChecker(
+	'https://github.com/GeorgeWebDevCy/isop-expoter',
+	__FILE__,
+	'isop-summer-camp-exporter'
+);
+
+//Set the branch that contains the stable release.
+$myUpdateChecker->setBranch('main');
+
+//Optional: If you're using a private repository, specify the access token like this:
+//$myUpdateChecker->setAuthentication('your-token-here');
+
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-isop-summer-camp-exporter-activator.php
