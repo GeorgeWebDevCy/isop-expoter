@@ -16,7 +16,7 @@
  * Plugin Name:       ISOP Summer Camp Exporter
  * Plugin URI:        https://georgenicolaou.me/plugins/isop-summer-school-exporter
  * Description:       This plugin will export all the information regarding the summer camp orders from WooCommerce to an Excel sheet in a human readable format
- * Version:           4.0.2
+ * Version:           4.0.3
  * Author:            George Nicolaou
  * Author URI:        https://www.georgenicolaou.me/
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('ISOP_SUMMER_CAMP_EXPORTER_VERSION', '4.0.2');
+define('ISOP_SUMMER_CAMP_EXPORTER_VERSION', '4.0.3');
 /*
 Constant I need for the custom exporter
 */
@@ -435,11 +435,11 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
         
         if ($child_data['weeks_is_isop'] != NULL) {
             //debug
-            //echo 'in if !null';
-            //echo '<pre>';
-                //var_dump($child_data['weeks_is_isop']);
-                //var_dump(in_array_multi(WEEK1, $child_data['weeks_is_isop'])); // true
-                //echo '</pre>';
+            echo 'in if !null';
+            echo '<pre>';
+            var_dump($child_data['weeks_is_isop']);
+            var_dump(in_array_multi(WEEK1, $child_data['weeks_is_isop'])); // true
+            echo '</pre>';
             if (in_array_multi(WEEK1, $child_data['weeks_is_isop'])) {
                 //echo 'in if week1';
                 $sheet->setCellValue('Q' . $row, SET_YES);
