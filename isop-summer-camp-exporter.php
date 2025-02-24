@@ -16,7 +16,7 @@
  * Plugin Name:       ISOP Summer Camp Exporter
  * Plugin URI:        https://georgenicolaou.me/plugins/isop-summer-school-exporter
  * Description:       This plugin will export all the information regarding the summer camp orders from WooCommerce to an Excel sheet in a human readable format
- * Version:           3.0.1
+ * Version:           4.0.0
  * Author:            George Nicolaou
  * Author URI:        https://www.georgenicolaou.me/
  * License:           GPL-2.0+
@@ -35,12 +35,12 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('ISOP_SUMMER_CAMP_EXPORTER_VERSION', '3.0.1');
+define('ISOP_SUMMER_CAMP_EXPORTER_VERSION', '4.0.0');
 /*
 Constant I need for the custom exporter
 */
 
-define('KINDERGARTEN', 'KINDERGARTEN PROGRAMME Ages: 2.5 - 3.5 (Only Non-ISOP. If your child is in the ISOP Kindergarten, please see their teacher)');
+/*define('KINDERGARTEN', 'KINDERGARTEN PROGRAMME Ages: 2.5 - 3.5 (Only Non-ISOP. If your child is in the ISOP Kindergarten, please see their teacher)');*/
 define('PROGRAMME', 'Select the Programme the child will be attending (Registration fee €20 non-refundable)');
 define('ISISOP', 'Was the child a student at The International School of Paphos in 2023-2024 and/or will the child be a student in  The International School of Paphos in 2024-2025?');
 define('YEARGROUP', 'Which year group are they in?');
@@ -54,12 +54,13 @@ define('ALLERGIES', 'Does your child have any health problems / allergies?');
 define('ALLOW_SWIMMING', 'I give permission for my child to take part in swimming');
 define('PARENTAL_CONSENT', 'As a parent/guardian of the applicant and with our doctor\'s agreement, I declare that my child is healthy and can take part in the athletic activities of the Summer Camp.');
 define('ADD_CHILD', 'Add Another Child');
-define('WEEK1', 'Week 1: Tuesday 25th June - Friday 28th June');
-define('WEEK2', 'Week 2: Monday 1st July - Friday 5th July');
-define('WEEK3', 'Week 3: Monday 8th July - Friday 12th July');
-define('WEEK4', 'Week 4: Monday 15th July - Friday 19th July');
-define('WEEK5', 'Week 5: Monday 22nd July - Friday 26th July');
-define('ALL_WEEKS', 'All 5 weeks (If you selected this, please do not select the weeks below)');
+define('WEEK1', 'Week 1: Tuesday 23rd June - Friday 27th June');
+define('WEEK2', 'Week 2: Monday 30th July - Friday 4th July');
+define('WEEK3', 'Week 3: Monday 7th July - Friday 11th July');
+define('WEEK4', 'Week 4: Monday 14th July - Friday 18th July');
+define('WEEK5', 'Week 5: Monday 21st July - Friday 25th July');
+define('WEEK56', 'Week 6: Monday 28th July - Thursday 31st July');
+define('ALL_WEEKS', 'All 6 weeks (If you selected this, please do not select the weeks below)');
 define('PARENT_NAME', 'Name of Parent / Guardian');
 define('PARENT_PHONE', 'Telephone / Contact number');
 define('PARENT_EMAIL', 'Parent\'s e-mail address');
@@ -299,18 +300,19 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
 	//echo '<pre>';
 	//var_dump($child_data);
 	//echo '</pre>';
-        $sheet->setCellValue('A' . $row, $order->get_id());
-        $sheet->setCellValue('B' . $row, $order->get_date_created()->format('Y-m-d H:i:s'));
-        $sheet->setCellValue('C' . $row, $order->get_status());
-        $sheet->setCellValue('Q' . $row, SET_NO);
-        $sheet->setCellValue('R' . $row, SET_NO);
-        $sheet->setCellValue('S' . $row, SET_NO);
-        $sheet->setCellValue('T' . $row, SET_NO);
-        $sheet->setCellValue('U' . $row, SET_NO);
-        $sheet->setCellValue('G' . $row, SET_NO);
-        $sheet->setCellValue('O' . $row, SET_NO);
-        $sheet->setCellValue('AA' . $row, SET_NO);
-        $sheet->setCellValue('H' . $row, "N/A");
+        $sheet->setCellValue('A' . $row, $order->get_id()); //order id
+        $sheet->setCellValue('B' . $row, $order->get_date_created()->format('Y-m-d H:i:s')); //order date
+        $sheet->setCellValue('C' . $row, $order->get_status()); //order status
+        $sheet->setCellValue('Q' . $row, SET_NO); //week 1
+        $sheet->setCellValue('R' . $row, SET_NO); //week 2
+        $sheet->setCellValue('S' . $row, SET_NO); //week 3
+        $sheet->setCellValue('T' . $row, SET_NO); //week 4 
+        $sheet->setCellValue('U' . $row, SET_NO); //week 5
+        $sheet->setCellValue('V' . $row, SET_NO); //week 6
+        $sheet->setCellValue('G' . $row, SET_NO); //isop student
+        $sheet->setCellValue('O' . $row, SET_NO); //swimming
+        $sheet->setCellValue('AB' . $row, SET_NO); //photo consent
+        $sheet->setCellValue('H' . $row, "N/A"); //yeargroup for kindergarden does apply in 2025
 
         $customer_name = $order->get_formatted_billing_full_name();
         if (!$customer_name) {
@@ -321,9 +323,9 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
         $sheet->setCellValue('F' . $row, $child_data['programme']);
 
         if (isset($child_data['photo'])) {
-            $sheet->setCellValue('AA' . $row, $child_data['photo']);
+            $sheet->setCellValue('AB' . $row, $child_data['photo']);
         }
-        if ($child_data['programme'] == KINDERGARTEN) {
+        /*if ($child_data['programme'] == KINDERGARTEN) {
             //echo "Row in child 1 row = " . $row. " Programme is if" . $child1['programme']; 
 
             $sheet->setCellValue('Q' . $row, SET_YES);
@@ -336,7 +338,7 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
             //kindergarten is non isop 100%
             $sheet->setCellValue('G' . $row, SET_NO);
             $sheet->setCellValue('O' . $row, SET_NO); //no swimming for sure
-        }
+        }*/
 
         if ($child_data['programme'] != KINDERGARTEN) {
             $sheet->setCellValue('F' . $row, $child_data['programme']);
@@ -384,7 +386,7 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
         }
 
         if (isset($child_data['photo'])) {
-            $sheet->setCellValue('AA' . $row, $child_data['photo']);
+            $sheet->setCellValue('AB' . $row, $child_data['photo']);
         }
 
         if ($child_data['weeks_non_isop'] != NULL) {
@@ -411,6 +413,11 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
                 $sheet->setCellValue('U' . $row, SET_YES);
             }
 
+            if (in_array_multi(WEEK6, $child_data['weeks_non_isop'])) {
+                $sheet->setCellValue('V' . $row, SET_YES);
+            }
+
+            
 
             if (in_array_multi(ALL_WEEKS, $child_data['weeks_non_isop'])) {
                 $sheet->setCellValue('Q' . $row, SET_YES);
@@ -418,6 +425,7 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
                 $sheet->setCellValue('S' . $row, SET_YES);
                 $sheet->setCellValue('T' . $row, SET_YES);
                 $sheet->setCellValue('U' . $row, SET_YES);
+                $sheet->setCellValue('V' . $row, SET_YES);
 
             }
         }
@@ -459,6 +467,11 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
                 $sheet->setCellValue('U' . $row, SET_YES);
             }
 
+            if (in_array_multi(WEEK6, $child_data['weeks_is_isop'])) {
+                //echo 'in if week5';
+                $sheet->setCellValue('V' . $row, SET_YES);
+            }
+
 
             if (in_array_multi(ALL_WEEKS, $child_data['weeks_is_isop'])) {
                 $sheet->setCellValue('Q' . $row, SET_YES);
@@ -466,16 +479,17 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
                 $sheet->setCellValue('S' . $row, SET_YES);
                 $sheet->setCellValue('T' . $row, SET_YES);
                 $sheet->setCellValue('U' . $row, SET_YES);
+                $sheet->setCellValue('V' . $row, SET_YES);
 
             }
         }
 
         //parent data set start
-        $sheet->setCellValue('V' . $row, $parent_name);
-        $sheet->setCellValue('W' . $row, $parent_phone);
-        $sheet->setCellValue('X' . $row, $parent_email);
-        $sheet->setCellValue('Y' . $row, $parent_address);
-        $sheet->setCellValue('Z' . $row, $parent_sig);
+        $sheet->setCellValue('W' . $row, $parent_name);
+        $sheet->setCellValue('X' . $row, $parent_phone);
+        $sheet->setCellValue('Y' . $row, $parent_email);
+        $sheet->setCellValue('Z' . $row, $parent_address);
+        $sheet->setCellValue('AA' . $row, $parent_sig);
 
 
 
@@ -560,12 +574,13 @@ function isop_summer_camp_callback()
             $sheet->setCellValue('S1', 'Week 3');
             $sheet->setCellValue('T1', 'Week 4');
             $sheet->setCellValue('U1', 'Week 5');
-            $sheet->setCellValue('V1', 'Parent Name');
-            $sheet->setCellValue('W1', 'Parent Phone');
-            $sheet->setCellValue('X1', 'Parent Email');
-            $sheet->setCellValue('Y1', 'Parent Address');
-            $sheet->setCellValue('Z1', 'Parent Signature');
-            $sheet->setCellValue('AA1', 'Photo Consent');
+            $sheet->setCellValue('V1', 'Week 6');
+            $sheet->setCellValue('W1', 'Parent Name');
+            $sheet->setCellValue('X1', 'Parent Phone');
+            $sheet->setCellValue('Y1', 'Parent Email');
+            $sheet->setCellValue('Z1', 'Parent Address');
+            $sheet->setCellValue('AA1', 'Parent Signature');
+            $sheet->setCellValue('AB1', 'Photo Consent');
 
             $row = 2;
             foreach ($orders as $order) {
@@ -735,6 +750,7 @@ function isop_summer_camp_callback()
             $sheet->getColumnDimension('Y')->setWidth(30);
             $sheet->getColumnDimension('Z')->setWidth(30);
             $sheet->getColumnDimension('AA')->setWidth(30);
+            $sheet->getColumnDimension('AB')->setWidth(30);
             // Set the styles for the header row
             $header_style = array(
                 'font' => array(
