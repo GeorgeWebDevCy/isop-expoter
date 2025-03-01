@@ -54,7 +54,7 @@ define('ALLERGIES', 'Does your child have any health problems / allergies?');
 define('ALLOW_SWIMMING', 'I give permission for my child to take part in swimming');
 define('PARENTAL_CONSENT', 'As a parent/guardian of the applicant and with our doctor\'s agreement, I declare that my child is healthy and can take part in the athletic activities of the Summer Camp.');
 define('ADD_CHILD', 'Add Another Child');
-define('WEEK1', 'Week 1: Tuesday 23rd June - Friday 27th June');
+define('WEEK1', 'Week 1: Monday 23rd June – Friday 27th June');
 define('WEEK2', 'Week 2: Monday 30th July - Friday 4th July');
 define('WEEK3', 'Week 3: Monday 7th July - Friday 11th July');
 define('WEEK4', 'Week 4: Monday 14th July - Friday 18th July');
@@ -296,10 +296,10 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
     if ($child_data['programme'] == NULL) {
         return $row; //just send me the same row back since nothing was affected
     } else { //start else
-	//echo 'order id = '.$order->get_id();
-	//echo '<pre>';
-	//var_dump($child_data);
-	//echo '</pre>';
+	echo 'order id = '.$order->get_id();
+	echo '<pre>';
+	var_dump($child_data);
+	echo '</pre>';
         $sheet->setCellValue('A' . $row, $order->get_id()); //order id
         $sheet->setCellValue('B' . $row, $order->get_date_created()->format('Y-m-d H:i:s')); //order date
         $sheet->setCellValue('C' . $row, $order->get_status()); //order status
@@ -469,7 +469,7 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
             }
 
             if (in_array_multi(WEEK6, $child_data['weeks_is_isop'])) {
-                //echo 'in if week5';
+                //echo 'in if week6';
                 $sheet->setCellValue('V' . $row, SET_YES);
             }
 
