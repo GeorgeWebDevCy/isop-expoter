@@ -16,7 +16,7 @@
  * Plugin Name:       ISOP Summer Camp Exporter
  * Plugin URI:        https://georgenicolaou.me/plugins/isop-summer-school-exporter
  * Description:       This plugin will export all the information regarding the summer camp orders from WooCommerce to an Excel sheet in a human readable format
- * Version:           4.0.5
+ * Version:           4.0.6
  * Author:            George Nicolaou
  * Author URI:        https://www.georgenicolaou.me/
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('ISOP_SUMMER_CAMP_EXPORTER_VERSION', '4.0.5');
+define('ISOP_SUMMER_CAMP_EXPORTER_VERSION', '4.0.6');
 /*
 Constant I need for the custom exporter
 */
@@ -236,6 +236,7 @@ function get_current_child_data($ch_programme, $ch_is_isop, $ch_year_group, $ch_
     $ch_parent_sig = strip_euro_recursive($ch_parent_sig);
     $ch_photo = strip_euro_recursive($ch_photo);
 
+
     // Create the data array
     $ch_data = array(
         'programme' => $ch_programme,
@@ -290,7 +291,7 @@ function in_array_multi(
     return false;
 }
 
-function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig)
+function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig,$marketing_source,$marketing_source_other)
 {
 	
     if ($child_data['programme'] == NULL) {
@@ -491,6 +492,9 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
         $sheet->setCellValue('Y' . $row, $parent_email);
         $sheet->setCellValue('Z' . $row, $parent_address);
         $sheet->setCellValue('AA' . $row, $parent_sig);
+        $sheet->setCellValue('AC' . $row, $marketing_source);
+        $sheet->setCellValue('AD' . $row, $marketing_source_other);
+
 
 
 
@@ -582,6 +586,9 @@ function isop_summer_camp_callback()
             $sheet->setCellValue('Z1', 'Parent Address');
             $sheet->setCellValue('AA1', 'Parent Signature');
             $sheet->setCellValue('AB1', 'Photo Consent');
+            $sheet->setCellValue('AC1', 'Marketing Source');
+            $sheet->setCellValue('AD1', 'Marketing Source Set to Other');
+
 
             $row = 2;
             foreach ($orders as $order) {
@@ -602,6 +609,8 @@ function isop_summer_camp_callback()
                 $parent_email = get_epo_data($order->get_id(), '63c796ae3514a5.64335462');
                 $parent_address = get_epo_data($order->get_id(), '63c796ae3514b1.17358693');
                 $parent_sig = get_epo_data($order->get_id(), '63c796ae3514c9.80400881');
+                $marketing_source = get_epo_data($order->get_id(), '67d085c0924cb1.29085079');
+                $marketing_source_other = get_epo_data($order->get_id(), '67d0864c924cd2.46491338');
 
                 $ch1_programme = get_epo_data($order->get_id(), '63c796ae350fd4.47899329');
                 $ch1_is_isop = get_epo_data($order->get_id(), '63c796ae351098.29269019');
@@ -712,12 +721,12 @@ function isop_summer_camp_callback()
               //  var_dump($child1);
                // echo '</pre>';
 				
-                $row = insert_child_into_sheet($sheet, $row, $order, $child1, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
-                $row = insert_child_into_sheet($sheet, $row, $order, $child2, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
-                $row = insert_child_into_sheet($sheet, $row, $order, $child3, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
-                $row = insert_child_into_sheet($sheet, $row, $order, $child4, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
-                $row = insert_child_into_sheet($sheet, $row, $order, $child5, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
-                $row = insert_child_into_sheet($sheet, $row, $order, $child6, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig);
+                $row = insert_child_into_sheet($sheet, $row, $order, $child1, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig,$marketing_source,$marketing_source_other);
+                $row = insert_child_into_sheet($sheet, $row, $order, $child2, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig,$marketing_source,$marketing_source_other);
+                $row = insert_child_into_sheet($sheet, $row, $order, $child3, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig,$marketing_source,$marketing_source_other);
+                $row = insert_child_into_sheet($sheet, $row, $order, $child4, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig,$marketing_source,$marketing_source_other);
+                $row = insert_child_into_sheet($sheet, $row, $order, $child5, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig,$marketing_source,$marketing_source_other);
+                $row = insert_child_into_sheet($sheet, $row, $order, $child6, $parent_name, $parent_phone, $parent_email, $parent_address, $parent_sig,$marketing_source,$marketing_source_other);
 //debug
 
 //var_dump($child1);
@@ -752,6 +761,8 @@ function isop_summer_camp_callback()
             $sheet->getColumnDimension('Z')->setWidth(30);
             $sheet->getColumnDimension('AA')->setWidth(30);
             $sheet->getColumnDimension('AB')->setWidth(30);
+            $sheet->getColumnDimension('AC')->setWidth(30);
+            $sheet->getColumnDimension('AD')->setWidth(30);
             // Set the styles for the header row
             $header_style = array(
                 'font' => array(
