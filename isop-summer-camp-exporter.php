@@ -1,3 +1,5 @@
+}
+}
 <?php
 
 /**
@@ -760,9 +762,9 @@ function isop_summer_camp_callback()
             $sheet->getColumnDimension('Y')->setWidth(30);
             $sheet->getColumnDimension('Z')->setWidth(30);
             $sheet->getColumnDimension('AA')->setWidth(30);
-            $sheet->getColumnDimension('AB')->setWidth(60);
-            $sheet->getColumnDimension('AC')->setWidth(30);
-            $sheet->getColumnDimension('AD')->setWidth(30);
+            $sheet->getColumnDimension('AB')->setWidth(30);
+            $sheet->getColumnDimension('AC')->setWidth(90);
+            $sheet->getColumnDimension('AD')->setWidth(90);
             // Set the styles for the header row
             $header_style = array(
                 'font' => array(
