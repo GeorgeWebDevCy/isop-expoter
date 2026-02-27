@@ -1,0 +1,479 @@
+﻿ISOP SUMMER CAMP EXPORTER - ARCHITECTURE AND DEPENDENCY DOCUMENTATION
+
+Generated on: 2026-02-27
+Repository path: d:\GitHub Projects\isop-expoter
+
+1) SCOPE
+
+This document explains, in detail, how the custom plugin ISOP Summer Camp Exporter works, how it depends on WooCommerce Extra Product Options (ThemeComplete EPO), and how the current product options CSV (current-product-options.csv) relates to hardcoded exporter IDs.
+
+Sources reviewed:
+- Local plugin code in this repository.
+- Dependency plugin code at:
+  C:\Users\georg\Downloads\codecanyon-o5qu7zYy-woocommerce-extra-product-options-wordpress-plugin\woocommerce-tm-extra-product-options
+
+2) PLUGIN PURPOSE
+
+ISOP Summer Camp Exporter adds an admin page that exports WooCommerce orders into an XLSX file.
+
+Design assumptions:
+- Parent-level information exists.
+- Up to 6 children can be submitted in one order.
+- Field values are stored by ThemeComplete EPO as order item metadata.
+
+Export shape:
+- One row per child (not one row per order).
+
+3) HIGH-LEVEL ARCHITECTURE
+
+Main components:
+- isop-summer-camp-exporter.php (bootstrap + all business logic)
+- includes/class-isop-summer-camp-exporter.php (boilerplate core)
+- includes/class-isop-summer-camp-exporter-loader.php
+- includes/class-isop-summer-camp-exporter-i18n.php
+- admin/class-isop-summer-camp-exporter-admin.php
+- public/class-isop-summer-camp-exporter-public.php
+- plugin-update-checker/*
+- vendor/* (PhpSpreadsheet)
+
+Dependency API used:
+- THEMECOMPLETE_EPO_API()->get_option(orderId, optionId)
+
+4) BOOTSTRAP FLOW
+
+On plugin load:
+- Defines constants.
+- Registers activation/deactivation hooks.
+- Initializes plugin-update-checker for GitHub updates.
+- Runs boilerplate class and hook loader.
+- Adds admin menu entry: Isop Summer Camp Exporter.
+
+Important finding:
+- Previously, isop-summer-camp-exporter.php began with 2 literal "}" lines before <?php.
+- This has now been fixed; the file starts cleanly and this specific early-output risk is removed.
+
+5) EXPORT PIPELINE
+
+Step 1: Submit admin form with start-year and end-year.
+
+Step 2: Check WooCommerce active.
+
+Step 3: Query orders with wc_get_orders:
+- status in [completed, processing, on-hold]
+- order by ID ASC
+- date_created in startYear-01-01...endYear-12-31
+- posts_per_page = -1
+
+Step 4: Build spreadsheet using PhpSpreadsheet.
+
+Step 5: For each order:
+- Read parent + marketing fields via hardcoded EPO IDs.
+- Read child1..child6 fields via hardcoded EPO IDs.
+- Normalize data in get_current_child_data.
+- Insert each child into sheet with insert_child_into_sheet.
+
+Step 6: Write XLSX to php://output with download headers.
+
+6) EXPORT DATA MODEL
+
+Each child structure contains:
+- programme, is_isop, year_group
+- weeks_non_isop, weeks_is_isop
+- name, surname, dob, nationality, langs_spoken
+- health, swimming, consent, add, photo
+- parent_name, parent_phone, parent_address, parent_email, parent_sig
+
+Normalization:
+- strip_euro_recursive recurses arrays and strips text after a misencoded Euro marker.
+
+7) XLSX COLUMN MAP
+
+A Order ID
+B Date
+C Status
+D Customer
+E Total
+F Programme
+G ISOP Student
+H Year Group
+I Name
+J Surname
+K DOB
+L Nationallity (spelling in code)
+M Languages
+N Allergies
+O Swimming allowed
+P Athletic activities allowed
+Q Week 1
+R Week 2
+S Week 3
+T Week 4
+U Week 5
+V Week 6
+W Parent Name
+X Parent Phone
+Y Parent Email
+Z Parent Address
+AA Parent Signature
+AB Photo Consent
+AC Marketing Source
+AD Marketing Source Set to Other
+
+8) THEMECOMPLETE EPO DEPENDENCY ARCHITECTURE
+
+Dependency plugin reviewed:
+- Extra Product Options & Add-Ons for WooCommerce
+- Version: 7.5.6
+
+Key dependency flow:
+- THEMECOMPLETE_EPO_API() returns singleton THEMECOMPLETE_EPO_API_Base.
+- Exporter uses get_option(...), which is deprecated wrapper to get_saved_addons_from_order(...).
+- get_saved_addons_from_order reads line item meta keys:
+  - _tmcartepo_data
+  - _tmcartfee_data
+- Data is parsed and returned grouped by order line item.
+
+Where section IDs come from:
+- EPO field save logic stores section => element uniqid.
+- At checkout, order line item gets _tmcartepo_data.
+- Exporter lookup IDs must match those uniqid values exactly.
+
+9) CURRENT-PRODUCT-OPTIONS.CSV FORMAT
+
+This file is EPO builder export format, not a simple one-row-per-field CSV.
+
+Characteristics:
+- Very wide schema with prefixed columns (selectbox_*, radiobuttons_*, checkboxes_*, textfield_*, date_*, etc.).
+- Rows are index-aligned across arrays.
+- Import logic reconstructs arrays by column prefix and row indexes.
+
+File stats:
+- 111 data rows (+ header).
+
+Detected uniqid counts in this CSV:
+- sections: 7
+- header: 8
+- selectbox: 13
+- radiobuttons: 29
+- checkboxes: 18
+- textfield: 30
+- date: 6
+- textarea: 6
+
+Sections:
+- Child 1 Section: 69a1695a7c0d34.05018140
+- Child 2 Section: 69a1695a7c0dc3.62297026
+- Child 3 Section: 69a1695a7c0dd1.95839351
+- Child 4 Section: 69a1695a7c0de8.60671284
+- Child 5 Section: 69a1695a7c0df7.84748842
+- Child 6 Section: 69a1695a7c0e04.58855085
+- Parent Info Section: 69a1695a7c0e15.80571741
+
+10) CURRENT CSV IDS FOR EXPORT-RELEVANT FIELDS
+
+CHILD REPEATED FIELD IDS (1..6)
+
+Programme:
+- 69a1695a7c0ea9.02082713
+- 69a1695a7c0ec4.78903872
+- 69a1695a7c0ee4.83165602
+- 69a1695a7c0f06.33469928
+- 69a1695a7c0f24.07286904
+- 69a1695a7c0f42.44973218
+
+Is ISOP:
+- 69a1695a7c0f74.09504718
+- 69a1695a7c0fc5.02663835
+- 69a1695a7c1018.73562668
+- 69a1695a7c1066.17656952
+- 69a1695a7c10b6.93091538
+- 69a1695a7c1106.86287243
+
+Year group:
+- 69a1695a7c0eb2.21953864
+- 69a1695a7c0ed1.17217141
+- 69a1695a7c0ef3.65612751
+- 69a1695a7c0f17.97629543
+- 69a1695a7c0f36.81403704
+- 69a1695a7c0f57.90637022
+
+Weeks non-ISOP:
+- 69a1695a7c1140.48717701
+- 69a1695a7c1172.05618072
+- 69a1695a7c11a9.13800066
+- 69a1695a7c1242.51721986
+- 69a1695a7c1275.63528494
+- 69a1695a7c12a8.83399846
+
+Weeks ISOP:
+- 69a1695a7c1152.89440043
+- 69a1695a7c1183.12477560
+- 69a1695a7c11b0.81646841
+- 69a1695a7c1250.73158171
+- 69a1695a7c1282.56556619
+- 69a1695a7c12e8.78249298
+
+Name:
+- 69a1695a7c1308.02829879
+- 69a1695a7c1344.61271865
+- 69a1695a7c1385.92716432
+- 69a1695a7c13c6.55032705
+- 69a1695a7c1434.04451151
+- 69a1695a7c1478.76545373
+
+Surname:
+- 69a1695a7c1313.60288492
+- 69a1695a7c1351.91965440
+- 69a1695a7c1399.66233074
+- 69a1695a7c13d4.53869052
+- 69a1695a7c1441.68392177
+- 69a1695a7c1489.91474275
+
+DOB:
+- 69a1695a7c1562.12839538
+- 69a1695a7c1579.01169817
+- 69a1695a7c1583.88760547
+- 69a1695a7c1598.89701528
+- 69a1695a7c15a7.11185236
+- 69a1695a7c15b1.51032037
+
+Nationality:
+- 69a1695a7c1326.64112164
+- 69a1695a7c1369.37220497
+- 69a1695a7c13a6.45871572
+- 69a1695a7c1416.46492015
+- 69a1695a7c1455.71124343
+- 69a1695a7c14b4.93312802
+
+Languages:
+- 69a1695a7c1332.20935890
+- 69a1695a7c1370.75713671
+- 69a1695a7c13b0.07881027
+- 69a1695a7c1426.13625078
+- 69a1695a7c1466.28004610
+- 69a1695a7c14c0.71052850
+
+Health/allergies:
+- 69a1695a7c15c2.52819341
+- 69a1695a7c15d1.39282728
+- 69a1695a7c15e7.91607207
+- 69a1695a7c15f6.30984382
+- 69a1695a7c1603.23082201
+- 69a1695a7c1611.87468054
+
+Swimming permission:
+- 69a1695a7c0f89.88311589
+- 69a1695a7c0fd6.82927620
+- 69a1695a7c1025.39379772
+- 69a1695a7c1078.87025028
+- 69a1695a7c10c6.92621074
+- 69a1695a7c1119.17109144
+
+Parental consent:
+- 69a1695a7c0f98.23082060
+- 69a1695a7c0fe0.86844026
+- 69a1695a7c1039.44641730
+- 69a1695a7c1088.25742100
+- 69a1695a7c10d0.21965373
+- 69a1695a7c1121.51828903
+
+Photo consent:
+- 69a1695a7c0fa6.37872831
+- 69a1695a7c0ff4.85291424
+- 69a1695a7c1049.19243106
+- 69a1695a7c1097.60866743
+- 69a1695a7c10e0.10325022
+- 69a1695a7c1130.56580189
+
+Add another child controls:
+- 69a1695a7c0fb3.44723221
+- 69a1695a7c1009.11213078
+- 69a1695a7c1055.75282022
+- 69a1695a7c10a9.74429260
+- 69a1695a7c10f6.23402097
+
+PARENT + MARKETING IDS
+
+- Parent name: 69a1695a7c14d6.23089076
+- Parent phone: 69a1695a7c14e4.02544636
+- Parent email: 69a1695a7c14f5.02100431
+- Parent address: 69a1695a7c1503.88503410
+- Parent signature: 69a1695a7c1511.62189457
+- Marketing source: 69a1695a7c0f64.05526525
+- Marketing source other: 69a1695a7c1527.20035702
+
+11) HARDCODED EXPORTER IDS VS CURRENT CSV IDS
+
+HARDCODED IDS CURRENTLY IN EXPORTER CODE
+
+Parent + marketing:
+- parent_name: 63c796ae351489.63307542
+- parent_phone: 63c796ae351491.52493353
+- parent_email: 63c796ae3514a5.64335462
+- parent_address: 63c796ae3514b1.17358693
+- parent_sig: 63c796ae3514c9.80400881
+- marketing_source: 67d085c0924cb1.29085079
+- marketing_source_other: 67d0864c924cd2.46491338
+
+Child repeated IDs (1..6 by field):
+
+Programme:
+- 63c796ae350fd4.47899329
+- 63c796ae350ff4.86528396
+- 63c796ae351014.63152225
+- 63c796ae351037.35378954
+- 63c796ae351056.35349346
+- 63c796ae351073.56974688
+
+Is ISOP:
+- 63c796ae351098.29269019
+- 63c796ae3510d6.49644554
+- 63c796ae351112.16466643
+- 63c796ae351159.16308749
+- 63c796ae351191.05095302
+- 63c796ae3511d9.66370336
+
+Year group:
+- 63c796ae350fe9.67195496
+- 63c796ae351002.93863775
+- 63c796ae351025.83062078
+- 63c796ae351042.98702374
+- 63c796ae351068.59422766
+- 63c796ae351081.10354514
+
+Weeks non-ISOP:
+- 63c796ae351207.25731871
+- 63c796ae351226.05609817
+- 63c796ae351244.09025481
+- 63c796ae351269.16023819
+- 63c796ae3512c5.48807658
+- 63c796ae3512e7.89146672
+
+Weeks ISOP:
+- 63c796ae351213.50136665
+- 63c796ae351233.01383284
+- 63c796ae351255.96533613
+- 63c796ae351272.45449040
+- 63c796ae3512d6.33127856
+- 63c796ae3512f6.58501165
+
+Name:
+- 63c796ae351307.70122204
+- 63c796ae351341.89993507
+- 63c796ae351384.61975114
+- 63c796ae3513c2.35501410
+- 63c796ae351403.28834192
+- 63c796ae351446.60946329
+
+Surname:
+- 63c796ae351316.45003654
+- 63c796ae351356.44394816
+- 63c796ae351394.09162182
+- 63c796ae3513d7.04441495
+- 63c796ae351418.19452819
+- 63c796ae351452.03336171
+
+DOB:
+- 63c796ae3514d2.17093747
+- 63c796ae3514e6.76479703
+- 63c796ae3514f3.26171042
+- 63c796ae351509.09606580
+- 63c796ae351513.50958059
+- 63c796ae351524.28460941
+
+Nationality:
+- 63c796ae351320.19034332
+- 63c796ae351363.69267898
+- 63c796ae3513a8.83702350
+- 63c796ae3513e6.31276199
+- 63c796ae351427.49487978
+- 63c796ae351467.65291553
+
+Languages:
+- 63c796ae351333.14471075
+- 63c796ae351375.65384919
+- 63c796ae3513b2.97668616
+- 63c796ae3513f8.02759799
+- 63c796ae351435.87962631
+- 63c796ae351479.57300118
+
+Health/allergies:
+- 63c796ae351538.87430147
+- 63c796ae351544.70768613
+- 63c796ae351557.74051345
+- 63c796ae351561.12618878
+- 63c796ae351572.36626393
+- 63c796ae351581.38636241
+
+Swimming:
+- 63c796ae3510a2.56869018
+- 63c796ae3510e4.01393417
+- 63c796ae351129.76215516
+- 63c796ae351162.38108754
+- 63c796ae3511a1.96267578
+- 63c796ae3511e3.43617115
+
+Parental consent:
+- 63c796ae3510b4.32887095
+- 63c796ae3510f5.73100731
+- 63c796ae351138.74682524
+- 63c796ae351175.59176972
+- 63c796ae3511b3.92669862
+- 63c796ae3511f6.41303666
+
+Add child:
+- 63c796ae3510c2.48147773
+- 63c796ae351105.12345352
+- 63c796ae351149.05024047
+- 63c796ae351188.63717837
+- 63c796ae3511c2.34129641
+
+Photo consent:
+- 63cd127a292407.37927849
+- 63cd1657292438.67347362
+- 63cd1669292448.40299089
+- 63cd1681292452.72686890
+- 63cd1698292467.84694245
+- 63cd16a9292474.15688992
+
+Comparison results:
+- Hardcoded exporter IDs: 96
+- IDs found in current CSV: 0
+- IDs missing from current CSV: 96
+
+Implication:
+- Exporter currently points to an older EPO field schema.
+- Current product option CSV IDs are different.
+- Without remapping, exports are expected to be blank/partial.
+
+12) ADDITIONAL RISKS FOUND
+
+- Two leading "}" lines before <?php in bootstrap file.
+- Debug echo/var_dump in row insertion can corrupt XLSX response.
+- Header style range excludes AB/AC/AD.
+- No nonce/capability hardening in POST handler.
+- Years are not strongly validated server-side.
+- Deprecated dependency method use (`get_option`).
+- Potential undefined variable (`ch6_add`).
+- `get_epo_checkbox` returns after first line item loop.
+
+13) MAINTENANCE CHECKLIST
+
+To align exporter with current product form:
+
+1. Replace all hardcoded IDs with current IDs listed above.
+2. Validate child index mapping (1..6) carefully.
+3. Update parent and marketing IDs.
+4. Remove debug output in export path.
+5. Remove extra leading characters before <?php.
+6. Add nonce and capability checks.
+7. Sanitize/cast year inputs.
+8. Consider replacing deprecated dependency call patterns.
+
+14) BOTTOM LINE
+
+Architecture is simple and deterministic:
+- Admin page submit -> order query -> EPO lookups by section IDs -> row-per-child XLSX.
+
+The critical architecture constraint is hardcoded ID coupling.
+Current state is out of sync with the current product options CSV (0/96 overlap).
