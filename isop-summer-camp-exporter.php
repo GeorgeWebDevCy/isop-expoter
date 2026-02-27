@@ -147,31 +147,56 @@ function isop_summer_camp_menu()
     add_menu_page(
         'Isop Summer Camp Exporter Page',
         'Isop Summer Camp Exporter',
-        'edit_posts',
+        'manage_woocommerce',
         'isop-summer-camp-Exporter',
         'isop_summer_camp_callback'
     );
 }
+
+function get_epo_options($orderid, $elementid)
+{
+    if (!function_exists('THEMECOMPLETE_EPO_API')) {
+        return array();
+    }
+
+    $epo_api = THEMECOMPLETE_EPO_API();
+    if (method_exists($epo_api, 'get_saved_addons_from_order')) {
+        $options = $epo_api->get_saved_addons_from_order($orderid, $elementid);
+    } else {
+        // Backward compatibility with older versions of the dependency plugin.
+        $options = $epo_api->get_option($orderid, $elementid);
+    }
+
+    return is_array($options) ? $options : array();
+}
+
 function get_epo_data($orderid, $elementid)
 {
-    $options = THEMECOMPLETE_EPO_API()->get_option($orderid, $elementid);
+    $options = get_epo_options($orderid, $elementid);
     foreach ($options as $item_id => $epos) {
         foreach ($epos as $epo) {
-            return $epo['value'];
+            if (isset($epo['value'])) {
+                return $epo['value'];
+            }
         }
     }
+
+    return null;
 }
 
 function get_epo_checkbox($orderid, $elementid)
 {
-	$myitems = array();
-    $options = THEMECOMPLETE_EPO_API()->get_option($orderid, $elementid);
+    $myitems = array();
+    $options = get_epo_options($orderid, $elementid);
     foreach ($options as $item_id => $epos) {
         foreach ($epos as $epo) {
-             $myitems[] = $epo['value'];
+            if (isset($epo['value'])) {
+                $myitems[] = $epo['value'];
+            }
         }
-		return $myitems;
     }
+
+    return $myitems;
 }
 
 /*function get_current_child_data($ch_programme, $ch_is_isop, $ch_year_group, $ch_weeks_is_isop, $ch_weeks_non_isop, $ch_name, $ch_surname, $ch_dob, $ch_nationality, $ch_langs_spoken, $ch_health, $ch_swimming, $ch_consent, $ch_add, $ch_parent_name, $ch_parent_phone, $ch_parent_address, $ch_parent_email, $ch_parent_sig, $ch_photo)
@@ -297,10 +322,6 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
     if ($child_data['programme'] == NULL) {
         return $row; //just send me the same row back since nothing was affected
     } else { //start else
-	echo 'order id = '.$order->get_id();
-	echo '<pre>';
-	var_dump($child_data);
-	echo '</pre>';
         $sheet->setCellValue('A' . $row, $order->get_id()); //order id
         $sheet->setCellValue('B' . $row, $order->get_date_created()->format('Y-m-d H:i:s')); //order date
         $sheet->setCellValue('C' . $row, $order->get_status()); //order status
@@ -435,12 +456,6 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
         //is isop
         
         if ($child_data['weeks_is_isop'] != NULL) {
-            //debug
-            echo 'in if !null';
-            echo '<pre>';
-            var_dump($child_data['weeks_is_isop']);
-            var_dump(in_array_multi(WEEK1, $child_data['weeks_is_isop'])); // true
-            echo '</pre>';
             if (in_array_multi(WEEK1, $child_data['weeks_is_isop'])) {
                 //echo 'in if week1';
                 $sheet->setCellValue('Q' . $row, SET_YES);
@@ -509,22 +524,55 @@ function insert_child_into_sheet($sheet, $row, $order, $child_data, $parent_name
 
 function isop_summer_camp_callback()
 {
+    $startYearInput = isset($_POST['start-year']) ? sanitize_text_field(wp_unslash($_POST['start-year'])) : '';
+    $endYearInput = isset($_POST['end-year']) ? sanitize_text_field(wp_unslash($_POST['end-year'])) : '';
 
 
     // Check if the user has clicked the export button
 
     if (isset($_POST['export_orders']) && isset($_POST['start-year']) && isset($_POST['end-year'])) {
+        if (!current_user_can('manage_woocommerce')) {
+            wp_die('You do not have permission to export orders.');
+        }
+
+        if (
+            !isset($_POST['isop_summer_camp_export_nonce']) ||
+            !wp_verify_nonce(
+                sanitize_text_field(wp_unslash($_POST['isop_summer_camp_export_nonce'])),
+                'isop_summer_camp_export'
+            )
+        ) {
+            wp_die('Security check failed.');
+        }
 
         //print_r($_POST);
         // Load the WooCommerce plugin functions
         require_once(ABSPATH . 'wp-admin/includes/plugin.php');
         if (is_plugin_active('woocommerce/woocommerce.php')) {
+            if (!function_exists('THEMECOMPLETE_EPO_API')) {
+                wp_die('ThemeComplete Extra Product Options API is not available.');
+            }
+
             // Get the orders to export
-            $startYear = $_POST['start-year'];
-            $endYear = $_POST['end-year'];
+            if (!preg_match('/^\d{4}$/', $startYearInput) || !preg_match('/^\d{4}$/', $endYearInput)) {
+                wp_die('Invalid year format. Please use YYYY.');
+            }
+
+            $startYear = (int) $startYearInput;
+            $endYear = (int) $endYearInput;
+            $maxAllowedYear = (int) gmdate('Y') + 2;
+
+            if ($startYear > $endYear) {
+                wp_die('Start year must be less than or equal to end year.');
+            }
+
+            if ($startYear < 2000 || $endYear > $maxAllowedYear) {
+                wp_die('Year range is out of allowed bounds.');
+            }
+
             // Construct the date range
-            $startDate = $startYear . '-01-01'; // Set the start date to the first day of the year
-            $endDate = $endYear . '-12-31'; // Set the end date to the last day of the year
+            $startDate = sprintf('%04d-01-01', $startYear); // Set the start date to the first day of the year
+            $endDate = sprintf('%04d-12-31', $endYear); // Set the end date to the last day of the year
             //echo 'Start date' . $startDate;
             //echo 'End date' . $endDate;
 
@@ -705,6 +753,7 @@ function isop_summer_camp_callback()
                 $ch6_health = get_epo_data($order->get_id(), '63c796ae351581.38636241');
                 $ch6_swimming = get_epo_data($order->get_id(), '63c796ae3511e3.43617115');
                 $ch6_consent = get_epo_data($order->get_id(), '63c796ae3511f6.41303666');
+                $ch6_add = null;
                 $ch6_photo = get_epo_data($order->get_id(), '63cd16a9292474.15688992');
 
                 $child1 = get_current_child_data($ch1_programme, $ch1_is_isop, $ch1_year_group, $ch1_weeks_is_isop, $ch1_weeks_non_isop, $ch1_name, $ch1_surname, $ch1_dob, $ch1_nationality, $ch1_langs_spoken, $ch1_health, $ch1_swimming, $ch1_consent, $ch1_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig, $ch1_photo);
@@ -772,7 +821,7 @@ function isop_summer_camp_callback()
                     'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
                 ),
             );
-            $sheet->getStyle('A1:AA1')->applyFromArray($header_style);
+            $sheet->getStyle('A1:AD1')->applyFromArray($header_style);
 
             // Set the page setup
             $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
@@ -788,12 +837,14 @@ function isop_summer_camp_callback()
 
 
             // Redirect output to a client’s web browser (Excel5)
-            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="isop-summer-camp-orders.xlsx"');
             header('Cache-Control: max-age=0');
 
             $excel_writer = new Xlsx($spreadsheet);
-            ob_end_clean();
+            while (ob_get_level() > 0) {
+                ob_end_clean();
+            }
             $excel_writer->save('php://output');
             exit;
         }
@@ -802,10 +853,11 @@ function isop_summer_camp_callback()
     // Display the export form
     ?>
     <form method="post" onsubmit="return validateForm()">
+        <?php wp_nonce_field('isop_summer_camp_export', 'isop_summer_camp_export_nonce'); ?>
         Start Year: <input type="text" id="start-year" name="start-year" pattern="[0-9]{4}"
-            value="<?php echo $_POST['start-year']; ?>"><br>
+            value="<?php echo esc_attr($startYearInput); ?>"><br>
         End Year: <input type="text" id="end-year" name="end-year" pattern="[0-9]{4}"
-            value="<?php echo $_POST['end-year']; ?>"><br>
+            value="<?php echo esc_attr($endYearInput); ?>"><br>
         <input type="submit" name="export_orders" value="Export Orders" id="export-orders-button" disabled>
     </form>
 

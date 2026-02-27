@@ -37,7 +37,8 @@ Main components:
 - vendor/* (PhpSpreadsheet)
 
 Dependency API used:
-- THEMECOMPLETE_EPO_API()->get_option(orderId, optionId)
+- THEMECOMPLETE_EPO_API()->get_saved_addons_from_order(orderId, optionId)
+  with fallback to get_option(orderId, optionId) for backward compatibility
 
 4) BOOTSTRAP FLOW
 
@@ -127,7 +128,8 @@ Dependency plugin reviewed:
 
 Key dependency flow:
 - THEMECOMPLETE_EPO_API() returns singleton THEMECOMPLETE_EPO_API_Base.
-- Exporter uses get_option(...), which is deprecated wrapper to get_saved_addons_from_order(...).
+- Exporter uses get_saved_addons_from_order(...) as primary method.
+- Exporter keeps get_option(...) only as fallback for older dependency versions.
 - get_saved_addons_from_order reads line item meta keys:
   - _tmcartepo_data
   - _tmcartfee_data
@@ -448,14 +450,14 @@ Implication:
 
 12) ADDITIONAL RISKS FOUND
 
-- Two leading "}" lines before <?php in bootstrap file.
-- Debug echo/var_dump in row insertion can corrupt XLSX response.
-- Header style range excludes AB/AC/AD.
-- No nonce/capability hardening in POST handler.
-- Years are not strongly validated server-side.
-- Deprecated dependency method use (`get_option`).
-- Potential undefined variable (`ch6_add`).
-- `get_epo_checkbox` returns after first line item loop.
+- Resolved: bootstrap file no longer has leading "}" output before <?php.
+- Resolved: debug echo/var_dump output removed from export path.
+- Resolved: header style range now includes AB/AC/AD (`A1:AD1`).
+- Resolved: POST export now enforces capability (`manage_woocommerce`) and nonce validation.
+- Resolved: years are now strictly validated server-side (YYYY format, bounds, start <= end).
+- Resolved: deprecated EPO API call replaced by `get_saved_addons_from_order` with fallback for older versions.
+- Resolved: `ch6_add` is explicitly initialized to avoid undefined variable warnings.
+- Resolved: `get_epo_checkbox` now iterates all order line items and returns all values.
 
 13) MAINTENANCE CHECKLIST
 
@@ -464,11 +466,9 @@ To align exporter with current product form:
 1. Replace all hardcoded IDs with current IDs listed above.
 2. Validate child index mapping (1..6) carefully.
 3. Update parent and marketing IDs.
-4. Remove debug output in export path.
-5. Remove extra leading characters before <?php.
-6. Add nonce and capability checks.
-7. Sanitize/cast year inputs.
-8. Consider replacing deprecated dependency call patterns.
+4. Keep nonce/capability/year validation checks in place for future edits.
+5. Keep export output path free of debug output (`echo`, `var_dump`, `print_r`).
+6. Keep EPO API access on non-deprecated methods (with fallback only for backward compatibility).
 
 14) BOTTOM LINE
 

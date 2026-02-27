@@ -44,7 +44,8 @@ The exported file has one row per child (not one row per order).
   (functions: `get_epo_data`, `get_epo_checkbox`, `get_current_child_data`, `insert_child_into_sheet`, `isop_summer_camp_callback`)
 
 5. Dependency API:
-- `THEMECOMPLETE_EPO_API()->get_option(...)` from ThemeComplete EPO plugin.
+- `THEMECOMPLETE_EPO_API()->get_saved_addons_from_order(...)` from ThemeComplete EPO plugin
+  (with fallback to `get_option(...)` for backward compatibility).
 
 ### 3.2 Runtime shape
 
@@ -213,11 +214,12 @@ Plugin header reviewed:
 ## 7.3 How exporter call resolves
 
 Exporter calls:
-- `THEMECOMPLETE_EPO_API()->get_option($orderId, $optionId)`
+- `THEMECOMPLETE_EPO_API()->get_saved_addons_from_order($orderId, $optionId)`
+- Fallback path: `get_option(...)` only if older dependency versions do not expose the new method.
 
 In dependency plugin:
 - `get_option(...)` is deprecated wrapper.
-- It forwards to `get_saved_addons_from_order(...)`.
+- `get_saved_addons_from_order(...)` is the current primary method.
 
 `get_saved_addons_from_order(...)`:
 - Requires `woocommerce_init` to have fired.
@@ -560,28 +562,28 @@ Expected runtime effect of this mismatch:
 - Resolved: historical `}` preamble issue at top of plugin file has been removed.
 
 2. Debug output in export path:
-- `echo` and `var_dump` inside `insert_child_into_sheet` can corrupt XLSX response.
+- Resolved: debug `echo` and `var_dump` output has been removed from runtime export flow.
 
 3. Week header style range:
-- Header style applied only to `A1:AA1`; columns `AB`, `AC`, `AD` are excluded.
+- Resolved: header style range now covers all output columns (`A1:AD1`).
 
 4. No nonce/capability hardening on export POST:
-- Form submit relies only on field existence.
+- Resolved: export POST now validates capability (`manage_woocommerce`) and nonce.
 
 5. Input sanitization:
-- `start-year` and `end-year` used directly without strict server-side validation/casting.
+- Resolved: years are sanitized, format-validated (`YYYY`), cast to int, and range-checked.
 
 6. Dependency assumptions:
-- Export calls EPO API directly and assumes ThemeComplete EPO is active and initialized.
+- Resolved: export path now checks ThemeComplete EPO API availability before processing.
 
 7. Deprecated dependency API method:
-- Uses `get_option(...)`, which is deprecated by dependency plugin.
+- Resolved: exporter now uses `get_saved_addons_from_order(...)` with backward-compatible fallback.
 
 8. Potential undefined variable:
-- `ch6_add` is passed into `get_current_child_data` but not assigned earlier.
+- Resolved: `ch6_add` is now explicitly initialized.
 
 9. Data retrieval scope:
-- `get_epo_checkbox` returns after first order item loop iteration (works only if expected data is in first line item).
+- Resolved: `get_epo_checkbox` now iterates all order items before returning results.
 
 ## 12. File-Level Architecture Map
 
@@ -610,11 +612,9 @@ To align exporter with `current-product-options.csv`:
 1. Replace all hardcoded EPO IDs in exporter with current IDs listed in Section 9.
 2. Confirm each child index mapping (child 1..6) exactly.
 3. Update parent and marketing IDs.
-4. Remove debug `echo`/`var_dump` from export path.
-5. Remove leading `}` lines before `<?php`.
-6. Add nonce and capability checks to export form handling.
-7. Validate and cast year inputs server-side.
-8. Optionally switch from deprecated `get_option` to newer dependency methods.
+4. Keep nonce/capability/year validation checks in place during future edits.
+5. Keep export output path free from debug output (`echo`, `var_dump`, `print_r`).
+6. Keep EPO API access on `get_saved_addons_from_order(...)`; retain fallback only for compatibility.
 
 ## 14. Bottom Line
 
