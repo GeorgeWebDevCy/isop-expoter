@@ -16,7 +16,7 @@
  * Plugin Name:       ISOP Summer Camp Exporter
  * Plugin URI:        https://georgenicolaou.me/plugins/isop-summer-school-exporter
  * Description:       This plugin will export all the information regarding the summer camp orders from WooCommerce to an Excel sheet in a human readable format
- * Version:           4.0.7
+ * Version:           4.0.8
  * Author:            George Nicolaou
  * Author URI:        https://www.georgenicolaou.me/
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('ISOP_SUMMER_CAMP_EXPORTER_VERSION', '4.0.7');
+define('ISOP_SUMMER_CAMP_EXPORTER_VERSION', '4.0.8');
 /*
 Constant I need for the custom exporter
 */
@@ -652,109 +652,109 @@ function isop_summer_camp_callback()
                 unset($ch5_weeks_non_isop);
                 unset($ch6_weeks_is_isop);
                 unset($ch6_weeks_non_isop);
-                $parent_name = get_epo_data($order->get_id(), '63c796ae351489.63307542');
-                $parent_phone = get_epo_data($order->get_id(), '63c796ae351491.52493353');
-                $parent_email = get_epo_data($order->get_id(), '63c796ae3514a5.64335462');
-                $parent_address = get_epo_data($order->get_id(), '63c796ae3514b1.17358693');
-                $parent_sig = get_epo_data($order->get_id(), '63c796ae3514c9.80400881');
-                $marketing_source = get_epo_data($order->get_id(), '67d085c0924cb1.29085079');
-                $marketing_source_other = get_epo_data($order->get_id(), '67d0864c924cd2.46491338');
+                $parent_name = get_epo_data($order->get_id(), '69a1695a7c14d6.23089076');
+                $parent_phone = get_epo_data($order->get_id(), '69a1695a7c14e4.02544636');
+                $parent_email = get_epo_data($order->get_id(), '69a1695a7c14f5.02100431');
+                $parent_address = get_epo_data($order->get_id(), '69a1695a7c1503.88503410');
+                $parent_sig = get_epo_data($order->get_id(), '69a1695a7c1511.62189457');
+                $marketing_source = get_epo_data($order->get_id(), '69a1695a7c0f64.05526525');
+                $marketing_source_other = get_epo_data($order->get_id(), '69a1695a7c1527.20035702');
 
-                $ch1_programme = get_epo_data($order->get_id(), '63c796ae350fd4.47899329');
-                $ch1_is_isop = get_epo_data($order->get_id(), '63c796ae351098.29269019');
-                $ch1_year_group = get_epo_data($order->get_id(), '63c796ae350fe9.67195496');
-                $ch1_weeks_non_isop[] = get_epo_checkbox($order->get_id(), '63c796ae351207.25731871');
-                $ch1_weeks_is_isop[] = get_epo_checkbox($order->get_id(), '63c796ae351213.50136665');
-                $ch1_name = get_epo_data($order->get_id(), '63c796ae351307.70122204');
-                $ch1_surname = get_epo_data($order->get_id(), '63c796ae351316.45003654');
-                $ch1_dob = get_epo_data($order->get_id(), '63c796ae3514d2.17093747');
-                $ch1_nationality = get_epo_data($order->get_id(), '63c796ae351320.19034332');
-                $ch1_langs_spoken = get_epo_data($order->get_id(), '63c796ae351333.14471075');
-                $ch1_health = get_epo_data($order->get_id(), '63c796ae351538.87430147');
-                $ch1_swimming = get_epo_data($order->get_id(), '63c796ae3510a2.56869018');
-                $ch1_consent = get_epo_data($order->get_id(), '63c796ae3510b4.32887095');
-                $ch1_add = get_epo_data($order->get_id(), '63c796ae3510c2.48147773');
-                $ch1_photo = get_epo_data($order->get_id(), '63cd127a292407.37927849');
+                $ch1_programme = get_epo_data($order->get_id(), '69a1695a7c0ea9.02082713');
+                $ch1_is_isop = get_epo_data($order->get_id(), '69a1695a7c0f74.09504718');
+                $ch1_year_group = get_epo_data($order->get_id(), '69a1695a7c0eb2.21953864');
+                $ch1_weeks_non_isop[] = get_epo_checkbox($order->get_id(), '69a1695a7c1140.48717701');
+                $ch1_weeks_is_isop[] = get_epo_checkbox($order->get_id(), '69a1695a7c1152.89440043');
+                $ch1_name = get_epo_data($order->get_id(), '69a1695a7c1308.02829879');
+                $ch1_surname = get_epo_data($order->get_id(), '69a1695a7c1313.60288492');
+                $ch1_dob = get_epo_data($order->get_id(), '69a1695a7c1562.12839538');
+                $ch1_nationality = get_epo_data($order->get_id(), '69a1695a7c1326.64112164');
+                $ch1_langs_spoken = get_epo_data($order->get_id(), '69a1695a7c1332.20935890');
+                $ch1_health = get_epo_data($order->get_id(), '69a1695a7c15c2.52819341');
+                $ch1_swimming = get_epo_data($order->get_id(), '69a1695a7c0f89.88311589');
+                $ch1_consent = get_epo_data($order->get_id(), '69a1695a7c0f98.23082060');
+                $ch1_add = get_epo_data($order->get_id(), '69a1695a7c0fb3.44723221');
+                $ch1_photo = get_epo_data($order->get_id(), '69a1695a7c0fa6.37872831');
 
-                $ch2_programme = get_epo_data($order->get_id(), '63c796ae350ff4.86528396');
-                $ch2_is_isop = get_epo_data($order->get_id(), '63c796ae3510d6.49644554');
-                $ch2_year_group = get_epo_data($order->get_id(), '63c796ae351002.93863775');
-                $ch2_weeks_non_isop = get_epo_checkbox($order->get_id(), '63c796ae351226.05609817');
-                $ch2_weeks_is_isop = get_epo_checkbox($order->get_id(), '63c796ae351233.01383284');
-                $ch2_name = get_epo_data($order->get_id(), '63c796ae351341.89993507');
-                $ch2_surname = get_epo_data($order->get_id(), '63c796ae351356.44394816');
-                $ch2_dob = get_epo_data($order->get_id(), '63c796ae3514e6.76479703');
-                $ch2_nationality = get_epo_data($order->get_id(), '63c796ae351363.69267898');
-                $ch2_langs_spoken = get_epo_data($order->get_id(), '63c796ae351375.65384919');
-                $ch2_health = get_epo_data($order->get_id(), '63c796ae351544.70768613');
-                $ch2_swimming = get_epo_data($order->get_id(), '63c796ae3510e4.01393417');
-                $ch2_consent = get_epo_data($order->get_id(), '63c796ae3510f5.73100731');
-                $ch2_add = get_epo_data($order->get_id(), '63c796ae351105.12345352');
-                $ch2_photo = get_epo_data($order->get_id(), '63cd1657292438.67347362');
+                $ch2_programme = get_epo_data($order->get_id(), '69a1695a7c0ec4.78903872');
+                $ch2_is_isop = get_epo_data($order->get_id(), '69a1695a7c0fc5.02663835');
+                $ch2_year_group = get_epo_data($order->get_id(), '69a1695a7c0ed1.17217141');
+                $ch2_weeks_non_isop = get_epo_checkbox($order->get_id(), '69a1695a7c1172.05618072');
+                $ch2_weeks_is_isop = get_epo_checkbox($order->get_id(), '69a1695a7c1183.12477560');
+                $ch2_name = get_epo_data($order->get_id(), '69a1695a7c1344.61271865');
+                $ch2_surname = get_epo_data($order->get_id(), '69a1695a7c1351.91965440');
+                $ch2_dob = get_epo_data($order->get_id(), '69a1695a7c1579.01169817');
+                $ch2_nationality = get_epo_data($order->get_id(), '69a1695a7c1369.37220497');
+                $ch2_langs_spoken = get_epo_data($order->get_id(), '69a1695a7c1370.75713671');
+                $ch2_health = get_epo_data($order->get_id(), '69a1695a7c15d1.39282728');
+                $ch2_swimming = get_epo_data($order->get_id(), '69a1695a7c0fd6.82927620');
+                $ch2_consent = get_epo_data($order->get_id(), '69a1695a7c0fe0.86844026');
+                $ch2_add = get_epo_data($order->get_id(), '69a1695a7c1009.11213078');
+                $ch2_photo = get_epo_data($order->get_id(), '69a1695a7c0ff4.85291424');
 
-                $ch3_programme = get_epo_data($order->get_id(), '63c796ae351014.63152225');
-                $ch3_is_isop = get_epo_data($order->get_id(), '63c796ae351112.16466643');
-                $ch3_year_group = get_epo_data($order->get_id(), '63c796ae351025.83062078');
-                $ch3_weeks_non_isop = get_epo_checkbox($order->get_id(), '63c796ae351244.09025481');
-                $ch3_weeks_is_isop = get_epo_checkbox($order->get_id(), '63c796ae351255.96533613');
-                $ch3_name = get_epo_data($order->get_id(), '63c796ae351384.61975114');
-                $ch3_surname = get_epo_data($order->get_id(), '63c796ae351394.09162182');
-                $ch3_dob = get_epo_data($order->get_id(), '63c796ae3514f3.26171042');
-                $ch3_nationality = get_epo_data($order->get_id(), '63c796ae3513a8.83702350');
-                $ch3_langs_spoken = get_epo_data($order->get_id(), '63c796ae3513b2.97668616');
-                $ch3_health = get_epo_data($order->get_id(), '63c796ae351557.74051345');
-                $ch3_swimming = get_epo_data($order->get_id(), '63c796ae351129.76215516');
-                $ch3_consent = get_epo_data($order->get_id(), '63c796ae351138.74682524');
-                $ch3_add = get_epo_data($order->get_id(), '63c796ae351149.05024047');
-                $ch3_photo = get_epo_data($order->get_id(), '63cd1669292448.40299089');
+                $ch3_programme = get_epo_data($order->get_id(), '69a1695a7c0ee4.83165602');
+                $ch3_is_isop = get_epo_data($order->get_id(), '69a1695a7c1018.73562668');
+                $ch3_year_group = get_epo_data($order->get_id(), '69a1695a7c0ef3.65612751');
+                $ch3_weeks_non_isop = get_epo_checkbox($order->get_id(), '69a1695a7c11a9.13800066');
+                $ch3_weeks_is_isop = get_epo_checkbox($order->get_id(), '69a1695a7c11b0.81646841');
+                $ch3_name = get_epo_data($order->get_id(), '69a1695a7c1385.92716432');
+                $ch3_surname = get_epo_data($order->get_id(), '69a1695a7c1399.66233074');
+                $ch3_dob = get_epo_data($order->get_id(), '69a1695a7c1583.88760547');
+                $ch3_nationality = get_epo_data($order->get_id(), '69a1695a7c13a6.45871572');
+                $ch3_langs_spoken = get_epo_data($order->get_id(), '69a1695a7c13b0.07881027');
+                $ch3_health = get_epo_data($order->get_id(), '69a1695a7c15e7.91607207');
+                $ch3_swimming = get_epo_data($order->get_id(), '69a1695a7c1025.39379772');
+                $ch3_consent = get_epo_data($order->get_id(), '69a1695a7c1039.44641730');
+                $ch3_add = get_epo_data($order->get_id(), '69a1695a7c1055.75282022');
+                $ch3_photo = get_epo_data($order->get_id(), '69a1695a7c1049.19243106');
 
-                $ch4_programme = get_epo_data($order->get_id(), '63c796ae351037.35378954');
-                $ch4_is_isop = get_epo_data($order->get_id(), '63c796ae351159.16308749');
-                $ch4_year_group = get_epo_data($order->get_id(), '63c796ae351042.98702374');
-                $ch4_weeks_non_isop = get_epo_checkbox($order->get_id(), '63c796ae351269.16023819');
-                $ch4_weeks_is_isop = get_epo_checkbox($order->get_id(), '63c796ae351272.45449040');
-                $ch4_name = get_epo_data($order->get_id(), '63c796ae3513c2.35501410');
-                $ch4_surname = get_epo_data($order->get_id(), '63c796ae3513d7.04441495');
-                $ch4_dob = get_epo_data($order->get_id(), '63c796ae351509.09606580');
-                $ch4_nationality = get_epo_data($order->get_id(), '63c796ae3513e6.31276199');
-                $ch4_langs_spoken = get_epo_data($order->get_id(), '63c796ae3513f8.02759799');
-                $ch4_health = get_epo_data($order->get_id(), '63c796ae351561.12618878');
-                $ch4_swimming = get_epo_data($order->get_id(), '63c796ae351162.38108754');
-                $ch4_consent = get_epo_data($order->get_id(), '63c796ae351175.59176972');
-                $ch4_add = get_epo_data($order->get_id(), '63c796ae351188.63717837');
-                $ch4_photo = get_epo_data($order->get_id(), '63cd1681292452.72686890');
+                $ch4_programme = get_epo_data($order->get_id(), '69a1695a7c0f06.33469928');
+                $ch4_is_isop = get_epo_data($order->get_id(), '69a1695a7c1066.17656952');
+                $ch4_year_group = get_epo_data($order->get_id(), '69a1695a7c0f17.97629543');
+                $ch4_weeks_non_isop = get_epo_checkbox($order->get_id(), '69a1695a7c1242.51721986');
+                $ch4_weeks_is_isop = get_epo_checkbox($order->get_id(), '69a1695a7c1250.73158171');
+                $ch4_name = get_epo_data($order->get_id(), '69a1695a7c13c6.55032705');
+                $ch4_surname = get_epo_data($order->get_id(), '69a1695a7c13d4.53869052');
+                $ch4_dob = get_epo_data($order->get_id(), '69a1695a7c1598.89701528');
+                $ch4_nationality = get_epo_data($order->get_id(), '69a1695a7c1416.46492015');
+                $ch4_langs_spoken = get_epo_data($order->get_id(), '69a1695a7c1426.13625078');
+                $ch4_health = get_epo_data($order->get_id(), '69a1695a7c15f6.30984382');
+                $ch4_swimming = get_epo_data($order->get_id(), '69a1695a7c1078.87025028');
+                $ch4_consent = get_epo_data($order->get_id(), '69a1695a7c1088.25742100');
+                $ch4_add = get_epo_data($order->get_id(), '69a1695a7c10a9.74429260');
+                $ch4_photo = get_epo_data($order->get_id(), '69a1695a7c1097.60866743');
 
-                $ch5_programme = get_epo_data($order->get_id(), '63c796ae351056.35349346');
-                $ch5_is_isop = get_epo_data($order->get_id(), '63c796ae351191.05095302');
-                $ch5_year_group = get_epo_data($order->get_id(), '63c796ae351068.59422766');
-                $ch5_weeks_non_isop = get_epo_checkbox($order->get_id(), '63c796ae3512c5.48807658');
-                $ch5_weeks_is_isop = get_epo_checkbox($order->get_id(), '63c796ae3512d6.33127856');
-                $ch5_name = get_epo_data($order->get_id(), '63c796ae351403.28834192');
-                $ch5_surname = get_epo_data($order->get_id(), '63c796ae351418.19452819');
-                $ch5_dob = get_epo_data($order->get_id(), '63c796ae351513.50958059');
-                $ch5_nationality = get_epo_data($order->get_id(), '63c796ae351427.49487978');
-                $ch5_langs_spoken = get_epo_data($order->get_id(), '63c796ae351435.87962631');
-                $ch5_health = get_epo_data($order->get_id(), '63c796ae351572.36626393');
-                $ch5_swimming = get_epo_data($order->get_id(), '63c796ae3511a1.96267578');
-                $ch5_consent = get_epo_data($order->get_id(), '63c796ae3511b3.92669862');
-                $ch5_add = get_epo_data($order->get_id(), '63c796ae3511c2.34129641');
-                $ch5_photo = get_epo_data($order->get_id(), '63cd1698292467.84694245');
+                $ch5_programme = get_epo_data($order->get_id(), '69a1695a7c0f24.07286904');
+                $ch5_is_isop = get_epo_data($order->get_id(), '69a1695a7c10b6.93091538');
+                $ch5_year_group = get_epo_data($order->get_id(), '69a1695a7c0f36.81403704');
+                $ch5_weeks_non_isop = get_epo_checkbox($order->get_id(), '69a1695a7c1275.63528494');
+                $ch5_weeks_is_isop = get_epo_checkbox($order->get_id(), '69a1695a7c1282.56556619');
+                $ch5_name = get_epo_data($order->get_id(), '69a1695a7c1434.04451151');
+                $ch5_surname = get_epo_data($order->get_id(), '69a1695a7c1441.68392177');
+                $ch5_dob = get_epo_data($order->get_id(), '69a1695a7c15a7.11185236');
+                $ch5_nationality = get_epo_data($order->get_id(), '69a1695a7c1455.71124343');
+                $ch5_langs_spoken = get_epo_data($order->get_id(), '69a1695a7c1466.28004610');
+                $ch5_health = get_epo_data($order->get_id(), '69a1695a7c1603.23082201');
+                $ch5_swimming = get_epo_data($order->get_id(), '69a1695a7c10c6.92621074');
+                $ch5_consent = get_epo_data($order->get_id(), '69a1695a7c10d0.21965373');
+                $ch5_add = get_epo_data($order->get_id(), '69a1695a7c10f6.23402097');
+                $ch5_photo = get_epo_data($order->get_id(), '69a1695a7c10e0.10325022');
 
-                $ch6_programme = get_epo_data($order->get_id(), '63c796ae351073.56974688');
-                $ch6_is_isop = get_epo_data($order->get_id(), '63c796ae3511d9.66370336');
-                $ch6_year_group = get_epo_data($order->get_id(), '63c796ae351081.10354514');
-                $ch6_weeks_non_isop = get_epo_checkbox($order->get_id(), '63c796ae3512e7.89146672');
-                $ch6_weeks_is_isop = get_epo_checkbox($order->get_id(), '63c796ae3512f6.58501165');
-                $ch6_name = get_epo_data($order->get_id(), '63c796ae351446.60946329');
-                $ch6_surname = get_epo_data($order->get_id(), '63c796ae351452.03336171');
-                $ch6_dob = get_epo_data($order->get_id(), '63c796ae351524.28460941');
-                $ch6_nationality = get_epo_data($order->get_id(), '63c796ae351467.65291553');
-                $ch6_langs_spoken = get_epo_data($order->get_id(), '63c796ae351479.57300118');
-                $ch6_health = get_epo_data($order->get_id(), '63c796ae351581.38636241');
-                $ch6_swimming = get_epo_data($order->get_id(), '63c796ae3511e3.43617115');
-                $ch6_consent = get_epo_data($order->get_id(), '63c796ae3511f6.41303666');
+                $ch6_programme = get_epo_data($order->get_id(), '69a1695a7c0f42.44973218');
+                $ch6_is_isop = get_epo_data($order->get_id(), '69a1695a7c1106.86287243');
+                $ch6_year_group = get_epo_data($order->get_id(), '69a1695a7c0f57.90637022');
+                $ch6_weeks_non_isop = get_epo_checkbox($order->get_id(), '69a1695a7c12a8.83399846');
+                $ch6_weeks_is_isop = get_epo_checkbox($order->get_id(), '69a1695a7c12e8.78249298');
+                $ch6_name = get_epo_data($order->get_id(), '69a1695a7c1478.76545373');
+                $ch6_surname = get_epo_data($order->get_id(), '69a1695a7c1489.91474275');
+                $ch6_dob = get_epo_data($order->get_id(), '69a1695a7c15b1.51032037');
+                $ch6_nationality = get_epo_data($order->get_id(), '69a1695a7c14b4.93312802');
+                $ch6_langs_spoken = get_epo_data($order->get_id(), '69a1695a7c14c0.71052850');
+                $ch6_health = get_epo_data($order->get_id(), '69a1695a7c1611.87468054');
+                $ch6_swimming = get_epo_data($order->get_id(), '69a1695a7c1119.17109144');
+                $ch6_consent = get_epo_data($order->get_id(), '69a1695a7c1121.51828903');
                 $ch6_add = null;
-                $ch6_photo = get_epo_data($order->get_id(), '63cd16a9292474.15688992');
+                $ch6_photo = get_epo_data($order->get_id(), '69a1695a7c1130.56580189');
 
                 $child1 = get_current_child_data($ch1_programme, $ch1_is_isop, $ch1_year_group, $ch1_weeks_is_isop, $ch1_weeks_non_isop, $ch1_name, $ch1_surname, $ch1_dob, $ch1_nationality, $ch1_langs_spoken, $ch1_health, $ch1_swimming, $ch1_consent, $ch1_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig, $ch1_photo);
                 $child2 = get_current_child_data($ch2_programme, $ch2_is_isop, $ch2_year_group, $ch2_weeks_is_isop, $ch2_weeks_non_isop, $ch2_name, $ch2_surname, $ch2_dob, $ch2_nationality, $ch2_langs_spoken, $ch2_health, $ch2_swimming, $ch2_consent, $ch2_add, $parent_name, $parent_phone, $parent_address, $parent_email, $parent_sig, $ch2_photo);
