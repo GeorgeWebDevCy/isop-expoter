@@ -16,7 +16,7 @@
  * Plugin Name:       ISOP Summer Camp Exporter
  * Plugin URI:        https://georgenicolaou.me/plugins/isop-summer-school-exporter
  * Description:       This plugin will export all the information regarding the summer camp orders from WooCommerce to an Excel sheet in a human readable format
- * Version:           4.0.8
+ * Version:           4.0.9
  * Author:            George Nicolaou
  * Author URI:        https://www.georgenicolaou.me/
  * License:           GPL-2.0+
@@ -35,14 +35,14 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('ISOP_SUMMER_CAMP_EXPORTER_VERSION', '4.0.8');
+define('ISOP_SUMMER_CAMP_EXPORTER_VERSION', '4.0.9');
 /*
 Constant I need for the custom exporter
 */
 
 /*define('KINDERGARTEN', 'KINDERGARTEN PROGRAMME Ages: 2.5 - 3.5 (Only Non-ISOP. If your child is in the ISOP Kindergarten, please see their teacher)');*/
 define('PROGRAMME', 'Select the Programme the child will be attending (Registration fee €20 non-refundable)');
-define('ISISOP', 'Was the child a student at The International School of Paphos in 2024-2025 and/or will the child be a student in  The International School of Paphos in 2025-2026?');
+define('ISISOP', 'Was the child a student at The International School of Paphos in 2025-2026 and/or will the child be a student in  The International School of Paphos in 2026-2027?');
 define('YEARGROUP', 'Which year group are they in?');
 define('WEEKS', 'Please choose the week/s that you would like to register your child for');
 define('NAME', 'Name');
@@ -54,12 +54,12 @@ define('ALLERGIES', 'Does your child have any health problems / allergies?');
 define('ALLOW_SWIMMING', 'I give permission for my child to take part in swimming');
 define('PARENTAL_CONSENT', 'As a parent/guardian of the applicant and with our doctor\'s agreement, I declare that my child is healthy and can take part in the athletic activities of the Summer Camp.');
 define('ADD_CHILD', 'Add Another Child');
-define('WEEK1', 'Week 1: Monday 23rd June – Friday 27th June');
-define('WEEK2', 'Week 2: Monday 30th July - Friday 4th July');
-define('WEEK3', 'Week 3: Monday 7th July - Friday 11th July');
-define('WEEK4', 'Week 4: Monday 14th July - Friday 18th July');
-define('WEEK5', 'Week 5: Monday 21st July - Friday 25th July');
-define('WEEK6', 'Week 6: Monday 28th July - Thursday 31st July');
+define('WEEK1', 'Week 1: Monday 22nd June – Friday 26th June');
+define('WEEK2', 'Week 2: Monday 29th June - Friday 3rd July');
+define('WEEK3', 'Week 3: Monday 6th July - Friday 10th July');
+define('WEEK4', 'Week 4: Monday 13th July - Friday 17th July');
+define('WEEK5', 'Week 5: Monday 20th July - Friday 24th July');
+define('WEEK6', 'Week 6: Monday 27th July - Friday 31st July');
 define('ALL_WEEKS', 'All 6 weeks (If you selected this, please do not select the weeks below)');
 define('PARENT_NAME', 'Name of Parent / Guardian');
 define('PARENT_PHONE', 'Telephone / Contact number');
